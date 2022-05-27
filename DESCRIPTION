@@ -14,6 +14,7 @@ Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
+biocViews:
 Imports: stats, readr, stringr, dplyr, purrr, magrittr, tidyr, GenomeInfoDb, GenomicRanges, IRanges, S4Vectors, rtracklayer, data.table, future, furrr, progressr, rmarkdown, ggplot2, forcats, UpSetR, svglite, ggrepel, ggbio, knitr, ROCit, Rsamtools, liftOver, Biostrings, multtest, tibble
 Suggests: 
     testthat (>= 3.0.0), BSgenome.Hsapiens.UCSC.hg19
