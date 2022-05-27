@@ -1,0 +1,21 @@
+Package: revana
+Title: Regulatory Variant Analysis and Visualization of Cancer Genomes
+Version: 0.9.0
+Authors@R: 
+    person(given = "Elias",
+           family = "Ulrich",
+           role = c("aut", "cre"),
+           email = "elias.ulrich@kitz-heidelberg.de",
+           comment = c(ORCID = "0000-0003-2489-7265"))
+Description: Revana is a comprehensive tool for regulatory variant detection. It can detect, analyse, and illustrate regulatory variants of different kinds. It works on whole genome (WGS) and RNA sequencing (RNA-Seq) data of a cohort of tumor samples and creates interactive HTML reports summarizing the most important regulatory events.
+License: `use_mit_license()`, `use_gpl3_license()` or friends to pick a
+    license
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.1
+Imports: stats, readr, stringr, dplyr, purrr, magrittr, tidyr, GenomeInfoDb, GenomicRanges, IRanges, S4Vectors, rtracklayer, data.table, future, furrr, progressr, rmarkdown, ggplot2, forcats, UpSetR, svglite, ggrepel, ggbio, knitr, ROCit, Rsamtools, liftOver, Biostrings, multtest, tibble
+Suggests: 
+    testthat (>= 3.0.0), BSgenome.Hsapiens.UCSC.hg19
+Config/testthat/edition: 3
+VignetteBuilder: knitr
