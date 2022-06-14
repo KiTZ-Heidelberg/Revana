@@ -8,8 +8,7 @@ Authors@R:
            email = "elias.ulrich@kitz-heidelberg.de",
            comment = c(ORCID = "0000-0003-2489-7265"))
 Description: Revana is a comprehensive tool for regulatory variant detection. It can detect, analyse, and illustrate regulatory variants of different kinds. It works on whole genome (WGS) and RNA sequencing (RNA-Seq) data of a cohort of tumor samples and creates interactive HTML reports summarizing the most important regulatory events.
-License: `use_mit_license()`, `use_gpl3_license()` or friends to pick a
-    license
+License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
