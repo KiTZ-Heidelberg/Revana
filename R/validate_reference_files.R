@@ -32,7 +32,7 @@ validate_reference_files <- function(gene_annotation_ref_file_path,
     }
 
     # chipseq file
-    if (is.null(genehancer_ref_file_path)) {
+    if (is.null(chipseq_file_path)) {
         cat("Revana is running WITHOUT ChIP-Seq functionality...\n")
     } else {
         check_file_existence(chipseq_file_path, name_of_file_type = "ChIP-Seq file")
