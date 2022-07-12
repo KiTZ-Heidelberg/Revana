@@ -67,7 +67,7 @@ validate_reference_files <- function(gene_annotation_ref_file_path,
 
 
     # chipseq reference file
-    if (!is.null(genehancer_ref_file_path)) {
+    if (!is.null(chipseq_file_path)) {
         required_cols_chipseq_file <- c("chrom", "start", "end", "cluster")
         check_file_table_header(chipseq_file_path, required_cols = required_cols_chipseq_file, name_of_file_type = "ChIP-Seq file")
     }
