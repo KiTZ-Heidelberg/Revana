@@ -53,7 +53,7 @@ run_step1_per_cohort <- function(paths_file_path,
   validate_files(paths)
 
   # validate dependencies  --------------------------------
-  if(is.null(reference_genome)){
+  if(is.null(reference_genome)&run_tf_binding_site_analysis){
     if (!requireNamespace("BSgenome.Hsapiens.UCSC.hg19", quietly = TRUE)) {
       stop(
         "Package \"BSgenome.Hsapiens.UCSC.hg19\" must be installed if you plan to run the TF Binding Site Analysis Feature.",
