@@ -274,11 +274,18 @@ find_marker_runs <- function(
             }
         }
     }
-
-    runs <- data.table::setDT(data.frame(
-        chrom = run_chrom[1:run_i],
-        start = run_start[1:run_i],
-        end = run_end[1:run_i]
-    ))
+    if(run_i > 0){
+        runs <- data.table::setDT(data.frame(
+            chrom = run_chrom[1:run_i],
+            start = run_start[1:run_i],
+            end = run_end[1:run_i]
+        ))
+    }else{
+        runs <- data.table::setDT(data.frame(
+                    chrom = character(0),
+                    start = numeric(0),
+                    end = numeric(0)
+        ))
+    }
     return(runs)
 }

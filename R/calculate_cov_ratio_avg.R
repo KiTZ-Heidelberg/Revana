@@ -7,8 +7,12 @@ calculate_cov_ratio_average_per_exon_unit <- function(copy_numbers, exon_units) 
 
     # ranges without copy number available -> copy number = 1
     GenomicRanges::setdiff(exon_units_granges, copy_numbers_granges) -> missing_copy_number_ranges
-    missing_copy_number_ranges$cov_ratio <- 1
-    copy_numbers_granges_complete <- c(copy_numbers_granges, missing_copy_number_ranges)
+    if(length(missing_copy_number_ranges$seqnames) > 0 ){
+        missing_copy_number_ranges$cov_ratio <- 1
+        copy_numbers_granges_complete <- c(copy_numbers_granges, missing_copy_number_ranges)
+    }else{
+            copy_numbers_granges_complete <- copy_numbers_granges
+    }
 
     # calculate binned average
     copy_numbers_RleList <- GenomicRanges::mcolAsRleList(copy_numbers_granges_complete, "cov_ratio")
