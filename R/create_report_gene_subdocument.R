@@ -522,10 +522,6 @@ create_report_gene_subdocument <- function(processed_data, GENE_NAME, color_pale
                 SVs_y_numeric <- {if(nrow(SVs_cis_activated_of_gene) > 0) as.numeric(as.factor(c(CNAs_and_SVs_y)))[(length(CNAs_cis_activated_of_gene$sample_ID)+1):length(CNAs_and_SVs_y)] else numeric(0)}
                 p_SVs_and_CNAs_cis_activated_y_breaks <- as.numeric(levels(as.factor(as.numeric(as.factor(CNAs_and_SVs_y)))))
                 p_SVs_and_CNAs_cis_activated_y_labels <- levels(as.factor(CNAs_and_SVs_y))
-                print("p_SVs_and_CNAs_cis_activated_y_breaks")
-                print(p_SVs_and_CNAs_cis_activated_y_breaks)
-                print("p_SVs_and_CNAs_cis_activated_y_labels")
-                print(p_SVs_and_CNAs_cis_activated_y_labels)
 
                 p_SVs_and_CNAs_cis_activated <- SVs_cis_activated_of_gene %>%
                     ggplot2::ggplot() +
