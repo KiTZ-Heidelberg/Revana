@@ -90,13 +90,24 @@ plot_expression_PCA_plot_by_subgroup <- function(processed_data, subgroup, color
 }
 
 plot_cis_activated_genes_bar_chart_by_subgroup <- function(processed_data, subgroup, color_palette) {
-    processed_data$cis_activated_genes_by_sample %>%
+    plot_data <- processed_data$cis_activated_genes_by_sample %>%
         dplyr::filter(sample_ID %in% processed_data$samples_by_subgroup[[subgroup]]) %>%
-        dplyr::mutate(sample_ID = forcats::fct_reorder(sample_ID, n_cis_activated_genes)) %>%
-        ggplot2::ggplot() +
-        ggplot2::geom_bar(ggplot2::aes(y = sample_ID, x = n_cis_activated_genes, fill = subgroup), stat = "identity") +
-        color_palette$scale_fill_subgroup +
-        ggplot2::labs(title = paste0("Cis activated genes per sample - ", subgroup))
+        dplyr::mutate(sample_ID = forcats::fct_reorder(sample_ID, n_cis_activated_genes))
+    if(nrow(plot_data)>0){
+        return(
+            plot_data %>%
+                ggplot2::ggplot() +
+                ggplot2::geom_bar(ggplot2::aes(y = sample_ID, x = n_cis_activated_genes, fill = subgroup), stat = "identity") +
+                color_palette$scale_fill_subgroup +
+                ggplot2::labs(title = paste0("Cis activated genes per sample - ", subgroup))
+            )
+    }else{
+        return(
+            plot_data %>%
+                ggplot2::ggplot() +
+                ggplot2::geom_blank()
+            )
+    }
 }
 
 plot_ase_detection_upset_plot_by_subgroup <- function(processed_data, subgroup) {

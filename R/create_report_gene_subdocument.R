@@ -474,59 +474,194 @@ create_report_gene_subdocument <- function(processed_data, GENE_NAME, color_pale
             TAD_range <- GenomicRanges::GRanges(seqnames = gene_info[["chrom"]], ranges = IRanges::IRanges(start = min_TAD_start, end = max_TAD_end))
             p_ideo <- ggbio::Ideogram(genome = genome_name, xlabel = TRUE, zoom.region = c(GenomicRanges::start(TAD_range),GenomicRanges::end(TAD_range)))
 
-            p_chipseq <- chipseq_by_genes_within_TAD %>%
-                ggplot2::ggplot() +
-                ggplot2::geom_errorbar(mapping = ggplot2::aes(xmin = start, xmax = end, y = as.factor(subgroup)), color = "red") +
-                ggplot2::labs(y="")
+            if(nrow(chipseq_by_genes_within_TAD) > 0){
+                # factor to numeric conversion is needed as ggbio::tracks throws error with factors in y scale
+                p_chipseq_y_numeric <- as.numeric(as.factor(chipseq_by_genes_within_TAD$subgroup))
+                p_chipseq_y_breaks <- as.numeric(levels(as.factor(as.numeric(as.factor(chipseq_by_genes_within_TAD$subgroup)))))
+                p_chipseq_y_labels <- levels(as.factor(chipseq_by_genes_within_TAD$subgroup))
 
+                p_chipseq <- chipseq_by_genes_within_TAD %>%
+                    ggplot2::ggplot() +
+                    ggplot2::geom_errorbar(mapping = ggplot2::aes(xmin = start, xmax = end, y = p_chipseq_y_numeric), color = "red") +
+                    ggplot2::scale_y_discrete(breaks = p_chipseq_y_breaks, labels = p_chipseq_y_labels) +
+                    ggplot2::labs(y="")
+            }else{
+                p_chipseq <- ggplot2::ggplot() + ggplot2::geom_blank()
+            }
 
-            p_genehancer <- genehancer_with_cis_activation_summary_of_gene_within_TAD %>%
+            if(nrow(genehancer_with_cis_activation_summary_of_gene_within_TAD) > 0){
+                # factor to numeric conversion is needed as ggbio::tracks throws error with factors in y scale
+                p_genehancer_y_numeric <- as.numeric(as.factor(genehancer_with_cis_activation_summary_of_gene_within_TAD$connected_gene))
+                p_genehancer_y_breaks <- as.numeric(levels(as.factor(as.numeric(as.factor(genehancer_with_cis_activation_summary_of_gene_within_TAD$connected_gene)))))
+                p_genehancer_y_labels <- levels(as.factor(genehancer_with_cis_activation_summary_of_gene_within_TAD$connected_gene))
+
+                p_genehancer <- genehancer_with_cis_activation_summary_of_gene_within_TAD %>%
                 ggplot2::ggplot() +
-                ggplot2::geom_errorbar(mapping = ggplot2::aes(xmin = start_genehancer, xmax = end_genehancer, y = as.factor(connected_gene)), color = "red") +
+                ggplot2::geom_errorbar(mapping = ggplot2::aes(xmin = start_genehancer, xmax = end_genehancer, y = p_genehancer_y_numeric), color = "red") +
+                ggplot2::scale_y_discrete(breaks = p_genehancer_y_breaks, labels = p_genehancer_y_labels) +
                 ggplot2::labs(y="") # +
                 # ggrepel::geom_label_repel(ggplot2::aes(x=start_genehancer, y=as.factor(connected_gene), label=paste0(genehancer_id, " - ", feature_name)), size = 2)
 
-            p_SVs_and_CNAs_cis_activated <- SVs_and_somatic_SNVs_of_gene %>%
+            }else{
+                p_genehancer <- ggplot2::ggplot() + ggplot2::geom_blank()
+            }
+
+            
+            SVs_cis_activated_of_gene <- SVs_and_somatic_SNVs_of_gene %>%
                 dplyr::filter(cis_activated_gene == TRUE) %>%
-                dplyr::filter(label == "SV") %>%
-                ggplot2::ggplot() +
-                ggplot2::geom_vline(xintercept = gene_info[["start"]]) +
-                ggplot2::geom_vline(xintercept = gene_info[["end"]]) + 
-                ggplot2::geom_point(ggplot2::aes(x=pos, y = as.factor(sample_ID), color=as.factor(label)), show.legend = F) +
-                ggplot2::geom_errorbar(dplyr::filter(CNAs_of_gene, cis_activated_gene == TRUE, cna_chrom == gene_info[["chrom"]]), mapping = ggplot2::aes(xmin = cna_start, xmax = cna_end, y = as.factor(sample_ID)), color = "green") + 
-                scale_color_mutation_type +
-                ggplot2::labs(y="")
+                dplyr::filter(label == "SV")
 
-            p_SNVs_cis_activated <- SVs_and_somatic_SNVs_of_gene %>%
+            CNAs_cis_activated_of_gene <- CNAs_of_gene %>% 
+                dplyr::filter(cis_activated_gene == TRUE, cna_chrom == gene_info[["chrom"]])
+
+            if((nrow(SVs_cis_activated_of_gene) > 0)|(nrow(CNAs_cis_activated_of_gene) > 0)){
+                # factor to numeric conversion is needed as ggbio::tracks throws error with factors in y scale
+                CNAs_and_SVs_y <- c(CNAs_cis_activated_of_gene$sample_ID, SVs_cis_activated_of_gene$sample_ID)
+
+                CNAs_y_numeric <- as.numeric(as.factor(c(CNAs_and_SVs_y)))[0:length(CNAs_cis_activated_of_gene$sample_ID)]
+                SVs_y_numeric <- {if(nrow(SVs_cis_activated_of_gene) > 0) as.numeric(as.factor(c(CNAs_and_SVs_y)))[(length(CNAs_cis_activated_of_gene$sample_ID)+1):length(CNAs_and_SVs_y)] else numeric(0)}
+                p_SVs_and_CNAs_cis_activated_y_breaks <- as.numeric(levels(as.factor(as.numeric(as.factor(CNAs_and_SVs_y)))))
+                p_SVs_and_CNAs_cis_activated_y_labels <- levels(as.factor(CNAs_and_SVs_y))
+                print("p_SVs_and_CNAs_cis_activated_y_breaks")
+                print(p_SVs_and_CNAs_cis_activated_y_breaks)
+                print("p_SVs_and_CNAs_cis_activated_y_labels")
+                print(p_SVs_and_CNAs_cis_activated_y_labels)
+
+                p_SVs_and_CNAs_cis_activated <- SVs_cis_activated_of_gene %>%
+                    ggplot2::ggplot() +
+                    ggplot2::geom_vline(xintercept = gene_info[["start"]]) +
+                    ggplot2::geom_vline(xintercept = gene_info[["end"]]) + 
+                    ggplot2::geom_point(ggplot2::aes(x=pos, y = SVs_y_numeric, color=as.factor(label)), show.legend = F) +
+                    ggplot2::geom_errorbar(CNAs_cis_activated_of_gene, mapping = ggplot2::aes(xmin = cna_start, xmax = cna_end, y = CNAs_y_numeric), color = "green", width=0.5) + 
+                    scale_color_mutation_type +
+                    ggplot2::scale_y_continuous(breaks = p_SVs_and_CNAs_cis_activated_y_breaks, labels = p_SVs_and_CNAs_cis_activated_y_labels) +
+                    ggplot2::labs(y="")+
+                    ggplot2::theme(panel.grid.minor = ggplot2::element_blank())
+            }else{
+                p_SVs_and_CNAs_cis_activated <- ggplot2::ggplot() + ggplot2::geom_blank()
+            }
+
+            # p_SVs_and_CNAs_cis_activated <- SVs_and_somatic_SNVs_of_gene %>%
+            #     dplyr::filter(cis_activated_gene == TRUE) %>%
+            #     dplyr::filter(label == "SV") %>%
+            #     ggplot2::ggplot() +
+            #     ggplot2::geom_vline(xintercept = gene_info[["start"]]) +
+            #     ggplot2::geom_vline(xintercept = gene_info[["end"]]) + 
+            #     ggplot2::geom_point(ggplot2::aes(x=pos, y = as.factor(sample_ID), color=as.factor(label)), show.legend = F) +
+            #     ggplot2::geom_errorbar(dplyr::filter(CNAs_of_gene, cis_activated_gene == TRUE, cna_chrom == gene_info[["chrom"]]), mapping = ggplot2::aes(xmin = cna_start, xmax = cna_end, y = as.factor(sample_ID)), color = "green") + 
+            #     scale_color_mutation_type +
+            #     ggplot2::labs(y="")
+
+            SNVs_cis_activated_of_gene <- SVs_and_somatic_SNVs_of_gene %>%
                 dplyr::filter(cis_activated_gene == TRUE) %>%
-                dplyr::filter(label == "somatic_SNV") %>%
-                ggplot2::ggplot() +
-                ggplot2::geom_vline(xintercept = gene_info[["start"]]) +
-                ggplot2::geom_vline(xintercept = gene_info[["end"]]) + 
-                ggplot2::geom_point(ggplot2::aes(x=pos, y = as.factor(sample_ID), color=as.factor(label)), show.legend = F) +
-                scale_color_mutation_type +
-                ggplot2::labs(y="")
+                dplyr::filter(label == "somatic_SNV")
 
-            p_SVs_and_CNAs_others <- SVs_and_somatic_SNVs_of_gene %>%
-                dplyr::filter(is.na(cis_activated_gene) | (cis_activated_gene == FALSE)) %>%
-                dplyr::filter(label == "SV") %>%
-                ggplot2::ggplot() +
-                ggplot2::geom_vline(xintercept = gene_info[["start"]]) +
-                ggplot2::geom_vline(xintercept = gene_info[["end"]]) + 
-                ggplot2::geom_point(ggplot2::aes(x=pos, y = as.factor(sample_ID), color=as.factor(label)), show.legend = F) +
-                scale_color_mutation_type +
-                ggplot2::geom_errorbar(dplyr::filter(CNAs_of_gene, is.na(cis_activated_gene) | (cis_activated_gene == FALSE), cna_chrom == gene_info[["chrom"]]), mapping = ggplot2::aes(xmin = cna_start, xmax = cna_end, y = as.factor(sample_ID)), color = "green") +
-                ggplot2::labs(y="")
+            if(nrow(SNVs_cis_activated_of_gene) > 0){
+                # factor to numeric conversion is needed as ggbio::tracks throws error with factors in y scale
 
-            p_SNVs_others <- SVs_and_somatic_SNVs_of_gene %>%
+                p_SNVs_cis_activated_y_numeric <- as.numeric(as.factor(SNVs_cis_activated_of_gene$sample_ID))
+                p_SNVs_cis_activated_y_breaks <- as.numeric(levels(as.factor(as.numeric(as.factor(SNVs_cis_activated_of_gene$sample_ID)))))
+                p_SNVs_cis_activated_y_labels <- levels(as.factor(SNVs_cis_activated_of_gene$sample_ID))
+
+                p_SNVs_cis_activated <- SNVs_cis_activated_of_gene %>%
+                    ggplot2::ggplot() +
+                    ggplot2::geom_vline(xintercept = gene_info[["start"]]) +
+                    ggplot2::geom_vline(xintercept = gene_info[["end"]]) + 
+                    { if(length(p_SNVs_cis_activated_y_numeric)>0)ggplot2::geom_point(ggplot2::aes(x=pos, y = p_SNVs_cis_activated_y_numeric, color=as.factor(label)), show.legend = F) } +
+                    scale_color_mutation_type +
+                    ggplot2::scale_y_continuous(breaks = p_SNVs_cis_activated_y_breaks, labels = p_SNVs_cis_activated_y_labels) +
+                    ggplot2::labs(y="")+
+                    ggplot2::theme(panel.grid.minor = ggplot2::element_blank())
+
+            }else{
+                p_SNVs_cis_activated <- ggplot2::ggplot() + ggplot2::geom_blank()
+            }
+
+            # p_SNVs_cis_activated <- SVs_and_somatic_SNVs_of_gene %>%
+            #     dplyr::filter(cis_activated_gene == TRUE) %>%
+            #     dplyr::filter(label == "somatic_SNV") %>%
+            #     ggplot2::ggplot() +
+            #     ggplot2::geom_vline(xintercept = gene_info[["start"]]) +
+            #     ggplot2::geom_vline(xintercept = gene_info[["end"]]) + 
+            #     ggplot2::geom_point(ggplot2::aes(x=pos, y = as.factor(sample_ID), color=as.factor(label)), show.legend = F) +
+            #     scale_color_mutation_type +
+            #     ggplot2::labs(y="")
+
+            SVs_others_of_gene <- SVs_and_somatic_SNVs_of_gene %>%
                 dplyr::filter(is.na(cis_activated_gene) | (cis_activated_gene == FALSE)) %>%
-                dplyr::filter(label == "somatic_SNV") %>%
-                ggplot2::ggplot() +
-                ggplot2::geom_vline(xintercept = gene_info[["start"]]) +
-                ggplot2::geom_vline(xintercept = gene_info[["end"]]) + 
-                ggplot2::geom_point(ggplot2::aes(x=pos, y = as.factor(sample_ID), color=as.factor(label)), show.legend = F) +
-                scale_color_mutation_type +
-                ggplot2::labs(y="")
+                dplyr::filter(label == "SV")
+
+            CNAs_others_of_gene <- CNAs_of_gene %>% 
+                dplyr::filter((is.na(cis_activated_gene) | (cis_activated_gene == FALSE)), cna_chrom == gene_info[["chrom"]])
+
+            if((nrow(SVs_others_of_gene) > 0)|(nrow(CNAs_others_of_gene) > 0)){
+                # factor to numeric conversion is needed as ggbio::tracks throws error with factors in y scale
+                CNAs_and_SVs_others_y <- c(CNAs_others_of_gene$sample_ID, SVs_others_of_gene$sample_ID)
+
+                CNAs_others_y_numeric <- as.numeric(as.factor(c(CNAs_and_SVs_others_y)))[0:length(CNAs_others_of_gene$sample_ID)]
+                SVs_others_y_numeric <- {if(nrow(SVs_others_of_gene) > 0) as.numeric(as.factor(c(CNAs_and_SVs_others_y)))[(length(CNAs_others_of_gene$sample_ID)+1):length(CNAs_and_SVs_others_y)] else numeric(0)}
+                p_SVs_and_CNAs_others_y_breaks <- as.numeric(levels(as.factor(as.numeric(as.factor(CNAs_and_SVs_others_y)))))
+                p_SVs_and_CNAs_others_y_labels <- levels(as.factor(CNAs_and_SVs_others_y))
+
+                p_SVs_and_CNAs_others <- SVs_others_of_gene %>%
+                    ggplot2::ggplot() +
+                    ggplot2::geom_vline(xintercept = gene_info[["start"]]) +
+                    ggplot2::geom_vline(xintercept = gene_info[["end"]]) + 
+                    { if(length(SVs_others_y_numeric) > 0) ggplot2::geom_point(ggplot2::aes(x=pos, y = SVs_others_y_numeric, color=as.factor(label)), show.legend = F) } +
+                    ggplot2::geom_errorbar(CNAs_others_of_gene, mapping = ggplot2::aes(xmin = cna_start, xmax = cna_end, y = CNAs_others_y_numeric), color = "green", width=0.5) + 
+                    scale_color_mutation_type +
+                    ggplot2::scale_y_continuous(breaks = p_SVs_and_CNAs_cis_activated_y_breaks, labels = p_SVs_and_CNAs_cis_activated_y_labels) +
+                    ggplot2::labs(y="")+
+                    ggplot2::theme(panel.grid.minor = ggplot2::element_blank())
+            }else{
+                p_SVs_and_CNAs_others <- ggplot2::ggplot() + ggplot2::geom_blank()
+            }
+
+            # p_SVs_and_CNAs_others <- SVs_and_somatic_SNVs_of_gene %>%
+            #     dplyr::filter(is.na(cis_activated_gene) | (cis_activated_gene == FALSE)) %>%
+            #     dplyr::filter(label == "SV") %>%
+            #     ggplot2::ggplot() +
+            #     ggplot2::geom_vline(xintercept = gene_info[["start"]]) +
+            #     ggplot2::geom_vline(xintercept = gene_info[["end"]]) + 
+            #     ggplot2::geom_point(ggplot2::aes(x=pos, y = as.factor(sample_ID), color=as.factor(label)), show.legend = F) +
+            #     scale_color_mutation_type +
+            #     ggplot2::geom_errorbar(dplyr::filter(CNAs_of_gene, is.na(cis_activated_gene) | (cis_activated_gene == FALSE), cna_chrom == gene_info[["chrom"]]), mapping = ggplot2::aes(xmin = cna_start, xmax = cna_end, y = as.factor(sample_ID)), color = "green") +
+            #     ggplot2::labs(y="")
+
+            SNVs_others_of_gene <- SVs_and_somatic_SNVs_of_gene %>%
+                dplyr::filter(is.na(cis_activated_gene) | (cis_activated_gene == FALSE)) %>%
+                dplyr::filter(label == "somatic_SNV")
+
+            if(nrow(SNVs_others_of_gene) > 0){
+                # factor to numeric conversion is needed as ggbio::tracks throws error with factors in y scale
+
+                p_SNVs_others_y_numeric <- as.numeric(as.factor(SNVs_others_of_gene$sample_ID))
+                p_SNVs_others_y_breaks <- as.numeric(levels(as.factor(as.numeric(as.factor(SNVs_others_of_gene$sample_ID)))))
+                p_SNVs_others_y_labels <- levels(as.factor(SNVs_others_of_gene$sample_ID))
+
+                p_SNVs_others <- SNVs_others_of_gene %>%
+                    ggplot2::ggplot() +
+                    ggplot2::geom_vline(xintercept = gene_info[["start"]]) +
+                    ggplot2::geom_vline(xintercept = gene_info[["end"]]) + 
+                    ggplot2::geom_point(ggplot2::aes(x=pos, y = p_SNVs_others_y_numeric, color=as.factor(label)), show.legend = F) +
+                    scale_color_mutation_type +
+                    ggplot2::scale_y_continuous(breaks = p_SNVs_others_y_breaks, labels = p_SNVs_others_y_labels) +
+                    ggplot2::labs(y="")+
+                    ggplot2::theme(panel.grid.minor = ggplot2::element_blank())
+
+            }else{
+                p_SNVs_others <- ggplot2::ggplot() + ggplot2::geom_blank()
+            }
+
+            # p_SNVs_others <- SVs_and_somatic_SNVs_of_gene %>%
+            #     dplyr::filter(is.na(cis_activated_gene) | (cis_activated_gene == FALSE)) %>%
+            #     dplyr::filter(label == "somatic_SNV") %>%
+            #     ggplot2::ggplot() +
+            #     ggplot2::geom_vline(xintercept = gene_info[["start"]]) +
+            #     ggplot2::geom_vline(xintercept = gene_info[["end"]]) + 
+            #     ggplot2::geom_point(ggplot2::aes(x=pos, y = as.factor(sample_ID), color=as.factor(label)), show.legend = F) +
+            #     scale_color_mutation_type +
+            #     ggplot2::labs(y="")
             
             if(nrow(cis_activated_genes_by_gene_within_TAD) > 0){
                 genes_within_TAD_GRanges <- GenomicRanges::makeGRangesFromDataFrame(
@@ -536,7 +671,7 @@ create_report_gene_subdocument <- function(processed_data, GENE_NAME, color_pale
                 genes_GRangesList<- GenomicRanges::split(genes_within_TAD_GRanges, as.factor(genes_within_TAD_GRanges$gene_name))
                 p_genes <- ggplot2::ggplot() + ggbio::geom_alignment(genes_GRangesList, type = "type")
 
-
+                # browser();
                 gene_locus_plot <- ggbio::tracks(
                 "Chromosome" = p_ideo,
                 "ChIP-seq" = p_chipseq,
@@ -546,7 +681,7 @@ create_report_gene_subdocument <- function(processed_data, GENE_NAME, color_pale
                 "SVs/CNAs\n(others)" = p_SVs_and_CNAs_others,
                 "SNVs\n(others)" = p_SNVs_others,
                 "Genes" = p_genes,
-                xlim = TAD_range,
+                xlim = c(IRanges::start(TAD_range),IRanges::end(TAD_range)),
                 label.text.cex = 0.7
             )
             }else{
@@ -558,7 +693,7 @@ create_report_gene_subdocument <- function(processed_data, GENE_NAME, color_pale
                     "SNVs\n(cis-act.)" = p_SNVs_cis_activated,
                     "SVs/CNAs\n(others)" = p_SVs_and_CNAs_others,
                     "SNVs\n(others)" = p_SNVs_others,
-                    xlim = TAD_range,
+                    xlim = c(IRanges::start(TAD_range),IRanges::end(TAD_range)),
                     label.text.cex = 0.7
                 )
             }
