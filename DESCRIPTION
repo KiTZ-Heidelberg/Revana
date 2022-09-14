@@ -1,21 +1,52 @@
 Package: revana
 Title: Regulatory Variant Analysis and Visualization of Cancer Genomes
 Version: 0.9.0
-Authors@R: 
-    person(given = "Elias",
-           family = "Ulrich",
-           role = c("aut", "cre"),
-           email = "elias.ulrich@kitz-heidelberg.de",
-           comment = c(ORCID = "0000-0003-2489-7265"))
+Authors@R:
+person(given = "Elias",
+family = "Ulrich",
+role = c("aut", "cre"),
+email = "elias.ulrich@kitz-heidelberg.de",
+comment = c(ORCID = "0000-0003-2489-7265"))
 Description: Revana is a comprehensive tool for regulatory variant detection. It can detect, analyse, and illustrate regulatory variants of different kinds. It works on whole genome (WGS) and RNA sequencing (RNA-Seq) data of a cohort of tumor samples and creates interactive HTML reports summarizing the most important regulatory events.
 License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
+Depends: R (>= 4.2.1)
 biocViews:
-Imports: stats, readr, stringr, dplyr, purrr, magrittr, tidyr, GenomeInfoDb, GenomicRanges, IRanges, S4Vectors, rtracklayer, data.table, future, furrr, progressr, rmarkdown, ggplot2, forcats, UpSetR, svglite, ggrepel, ggbio, knitr, ROCit, Rsamtools, liftOver, Biostrings, multtest, tibble
-Suggests: 
-    testthat (>= 3.0.0), BSgenome.Hsapiens.UCSC.hg19
+Imports:
+stats (>= 4.2.1),
+readr (>= 2.1.2),
+stringr (>= 1.4.1),
+dplyr (>= 1.0.10),
+purrr (>= 0.3.4),
+magrittr (>= 2.0.3),
+tidyr (>= 1.2.0),
+GenomeInfoDb (>= 1.32.3),
+GenomicRanges (>= 1.48.0),
+IRanges (>= 2.30.1),
+S4Vectors (>= 0.34.0),
+rtracklayer (>= 1.56.1),
+data.table (>= 1.14.2),
+future (>= 1.28.0),
+furrr (>= 0.3.1),
+progressr (>= 0.11.0),
+rmarkdown (>= 2.16),
+ggplot2 (>= 3.3.6),
+forcats (>= 0.5.2),
+UpSetR (>= 1.4.0),
+svglite (>= 2.1.0),
+ggrepel (>= 0.9.1),
+ggbio (>= 1.44.1),
+knitr (>= 1.40),
+ROCit (>= 2.1.1),
+Rsamtools (>= 2.12.0),
+liftOver (>= 1.20.0),
+Biostrings (>= 2.64.1),
+multtest (>= 2.52.0),
+tibble (>= 3.1.8)
+Suggests:
+testthat (>= 3.0.0), BSgenome.Hsapiens.UCSC.hg19
 Config/testthat/edition: 3
 VignetteBuilder: knitr
