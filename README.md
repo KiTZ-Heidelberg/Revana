@@ -1,63 +1,62 @@
-Revana-Documentation
-================
+# Revana-Documentation
 
--   <a href="#1---installation" id="toc-1---installation">1 -
-    Installation</a>
--   <a href="#2---input-formats" id="toc-2---input-formats">2 - Input
-    Formats</a>
-    -   <a href="#required-files-for-each-tumor-sample"
-        id="toc-required-files-for-each-tumor-sample">Required files for each
-        tumor sample</a>
-        -   <a href="#marker-file" id="toc-marker-file">Marker file</a>
-        -   <a href="#copy-number-file" id="toc-copy-number-file">Copy number
-            file</a>
-        -   <a href="#cna-file" id="toc-cna-file">CNA file</a>
-        -   <a href="#somatic-snv-file" id="toc-somatic-snv-file">Somatic SNV
-            file</a>
-        -   <a href="#expression-file" id="toc-expression-file">Expression File</a>
-        -   <a href="#sv-file" id="toc-sv-file">SV file</a>
-    -   <a href="#required-input-files-for-the-whole-cohort"
-        id="toc-required-input-files-for-the-whole-cohort">Required input files
-        for the whole cohort</a>
-        -   <a href="#paths-file" id="toc-paths-file">Paths file</a>
-        -   <a href="#tad-file" id="toc-tad-file">TAD file</a>
-        -   <a href="#chip-seq-file" id="toc-chip-seq-file">ChIP-seq file</a>
-    -   <a href="#reference-files-for-the-whole-cohort"
-        id="toc-reference-files-for-the-whole-cohort">Reference files for the
-        whole cohort</a>
-        -   <a href="#gene-annotation-reference-file"
-            id="toc-gene-annotation-reference-file">Gene Annotation Reference
-            file</a>
-        -   <a href="#exon-annotation-reference-file"
-            id="toc-exon-annotation-reference-file">Exon Annotation Reference
-            file</a>
-        -   <a href="#fimo-motif-reference-file"
-            id="toc-fimo-motif-reference-file">FIMO Motif Reference File</a>
-        -   <a href="#fimo-motif-id---tf-gene-name-conversion-table-file"
-            id="toc-fimo-motif-id---tf-gene-name-conversion-table-file">FIMO Motif
-            Id - TF Gene Name Conversion Table File</a>
-        -   <a href="#genehancer-reference-file"
-            id="toc-genehancer-reference-file">GeneHancer Reference File</a>
--   <a href="#3---create-required-referenceinput-data-with-revana"
-    id="toc-3---create-required-referenceinput-data-with-revana">3 - Create
-    Required Reference/Input Data with Revana</a>
-    -   <a href="#marker-file-1" id="toc-marker-file-1">Marker File</a>
-    -   <a href="#geneexon-annotation-reference-file"
-        id="toc-geneexon-annotation-reference-file">Gene/Exon Annotation
-        Reference File</a>
-    -   <a href="#genehancer-reference-file-1"
-        id="toc-genehancer-reference-file-1">GeneHancer Reference File</a>
-    -   <a href="#fimo-motif-id---tf-gene-name-conversion-table-file-1"
-        id="toc-fimo-motif-id---tf-gene-name-conversion-table-file-1">FIMO Motif
-        Id - TF Gene Name Conversion Table File</a>
--   <a href="#4---run-revana" id="toc-4---run-revana">4 - Run Revana</a>
-    -   <a href="#different-genome-build"
-        id="toc-different-genome-build">Different Genome build</a>
-    -   <a href="#transcription-factor-tf-binding-site-analysis"
-        id="toc-transcription-factor-tf-binding-site-analysis">Transcription
-        Factor (TF) Binding Site Analysis</a>
--   <a href="#5---revana-workflow-in-detail"
-    id="toc-5---revana-workflow-in-detail">5 - Revana Workflow in Detail</a>
+- <a href="#1---installation" id="toc-1---installation">1 -
+  Installation</a>
+- <a href="#2---input-formats" id="toc-2---input-formats">2 - Input
+  Formats</a>
+  - <a href="#required-files-for-each-tumor-sample"
+    id="toc-required-files-for-each-tumor-sample">Required files for each
+    tumor sample</a>
+    - <a href="#marker-file" id="toc-marker-file">Marker file</a>
+    - <a href="#copy-number-file" id="toc-copy-number-file">Copy number
+      file</a>
+    - <a href="#cna-file" id="toc-cna-file">CNA file</a>
+    - <a href="#somatic-snv-file" id="toc-somatic-snv-file">Somatic SNV
+      file</a>
+    - <a href="#expression-file" id="toc-expression-file">Expression File</a>
+    - <a href="#sv-file" id="toc-sv-file">SV file</a>
+  - <a href="#required-input-files-for-the-whole-cohort"
+    id="toc-required-input-files-for-the-whole-cohort">Required input files
+    for the whole cohort</a>
+    - <a href="#paths-file" id="toc-paths-file">Paths file</a>
+    - <a href="#tad-file" id="toc-tad-file">TAD file</a>
+    - <a href="#chip-seq-file" id="toc-chip-seq-file">ChIP-seq file</a>
+  - <a href="#reference-files-for-the-whole-cohort"
+    id="toc-reference-files-for-the-whole-cohort">Reference files for the
+    whole cohort</a>
+    - <a href="#gene-annotation-reference-file"
+      id="toc-gene-annotation-reference-file">Gene Annotation Reference
+      file</a>
+    - <a href="#exon-annotation-reference-file"
+      id="toc-exon-annotation-reference-file">Exon Annotation Reference
+      file</a>
+    - <a href="#fimo-motif-reference-file"
+      id="toc-fimo-motif-reference-file">FIMO Motif Reference File</a>
+    - <a href="#fimo-motif-id---tf-gene-name-conversion-table-file"
+      id="toc-fimo-motif-id---tf-gene-name-conversion-table-file">FIMO Motif
+      Id - TF Gene Name Conversion Table File</a>
+    - <a href="#genehancer-reference-file"
+      id="toc-genehancer-reference-file">GeneHancer Reference File</a>
+- <a href="#3---create-required-referenceinput-data-with-revana"
+  id="toc-3---create-required-referenceinput-data-with-revana">3 - Create
+  Required Reference/Input Data with Revana</a>
+  - <a href="#marker-file-1" id="toc-marker-file-1">Marker File</a>
+  - <a href="#geneexon-annotation-reference-file"
+    id="toc-geneexon-annotation-reference-file">Gene/Exon Annotation
+    Reference File</a>
+  - <a href="#genehancer-reference-file-1"
+    id="toc-genehancer-reference-file-1">GeneHancer Reference File</a>
+  - <a href="#fimo-motif-id---tf-gene-name-conversion-table-file-1"
+    id="toc-fimo-motif-id---tf-gene-name-conversion-table-file-1">FIMO Motif
+    Id - TF Gene Name Conversion Table File</a>
+- <a href="#4---run-revana" id="toc-4---run-revana">4 - Run Revana</a>
+  - <a href="#different-genome-build"
+    id="toc-different-genome-build">Different Genome build</a>
+  - <a href="#transcription-factor-tf-binding-site-analysis"
+    id="toc-transcription-factor-tf-binding-site-analysis">Transcription
+    Factor (TF) Binding Site Analysis</a>
+- <a href="#5---revana-workflow-in-detail"
+  id="toc-5---revana-workflow-in-detail">5 - Revana Workflow in Detail</a>
 
 <br/><br/>
 
@@ -65,7 +64,7 @@ Revana-Documentation
 
 Revana can be installed from the R console with the following command:
 
-``` r
+```r
 if (!requireNamespace("devtools", quietly = TRUE))
     install.packages("devtools")
 devtools::install_github("https://github.com/KiTZ-Heidelberg/revana")
@@ -88,7 +87,7 @@ Create Required reference/input data with Revana). The file is formatted
 as tab separated values with header and contains the following columns:
 
 | Column name   | Description                             | Example  |
-|---------------|-----------------------------------------|----------|
+| ------------- | --------------------------------------- | -------- |
 | chrom         | chromosome of the SNP in “UCSC style”   | chr12    |
 | pos           | genomic position of the SNP             | 12000678 |
 | ref           | reference base at SNP position          | A        |
@@ -106,7 +105,7 @@ formatted as tab separated values with header and contains the following
 columns:
 
 | Column name     | Description                          | Example  |
-|-----------------|--------------------------------------|----------|
+| --------------- | ------------------------------------ | -------- |
 | chrom           | chromosome of the genomic region     |          |
 | in “UCSC style” | chr12                                |          |
 | start           | start of the genomic region          | 11000000 |
@@ -118,12 +117,12 @@ columns:
 The CNA file contains somatic copy number alterations (CNAs), that is
 regions with divergent ploidy or copy number in the somatic tissue. We
 have previously used regions with copy number alterations with
-![\Delta\_{copy number} \> 0.3](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5CDelta_%7Bcopy%20number%7D%20%3E%200.3 "\Delta_{copy number} > 0.3")
+![\Delta_{copy number} > 0.3](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5CDelta_%7Bcopy%20number%7D%20%3E%200.3 "\\Delta_{copy number} > 0.3")
 but any threshold can be used. The file is formatted as tab separated
 values with header and contains the following columns:
 
 | Column name     | Description                                                 | Example  |
-|-----------------|-------------------------------------------------------------|----------|
+| --------------- | ----------------------------------------------------------- | -------- |
 | chrom           | chromosome of the genomic region of the CNA                 |          |
 | in “UCSC style” | chr12                                                       |          |
 | start           | start of the genomic region of the CNA                      | 11000000 |
@@ -135,6 +134,11 @@ values with header and contains the following columns:
 \* These columns are annotative only. Thus, no calculations are based on
 their values.
 
+ℹ️ Difference between the Copy number file and the CNA file:
+
+The **copy number** file provides Revana with the determined read coverage ratio of genomic ranges across the entire genome.
+The **CNA file** provides only those genomic regions that are considered as abberant by the user. Therefor, the filtering of this input files determines which copy number alterations are considered as real somatic genomic events.
+
 ### Somatic SNV file
 
 This file contains somatic single nucleotide variants (SNVs) and small
@@ -142,7 +146,7 @@ insertions and deletions (InDels). The file is formatted as tab
 separated values with header and contains the following columns:
 
 | Column name | Description                                                 | Example  |
-|-------------|-------------------------------------------------------------|----------|
+| ----------- | ----------------------------------------------------------- | -------- |
 | chrom       | chromosome of the SNV or Indel in “UCSC style”              | chr12    |
 | pos         | genomic position of the SNV or Indel                        | 12000678 |
 | ref         | reference base at SNV position                              | A        |
@@ -153,7 +157,7 @@ separated values with header and contains the following columns:
 Insertions and deletions should be listed in the following format:
 
 | Variant               | Ref Value | Alt Value |
-|-----------------------|-----------|-----------|
+| --------------------- | --------- | --------- |
 | Small insertion of GT | A         | AGT       |
 | Small deletion of ATG | CATG      | C         |
 
@@ -166,7 +170,7 @@ file is formatted as tab separated values with header and contains the
 following columns:
 
 | Column name | Description             | Example |
-|-------------|-------------------------|---------|
+| ----------- | ----------------------- | ------- |
 | gene_name   | Name of the gene        | PRDM6   |
 | FPKM        | Gene expression in FPKM | 410.2   |
 
@@ -177,7 +181,7 @@ genomice breakpoints. The file is formatted as tab separated values with
 header and contains the following columns:
 
 | Column name      | Description                                                      | Example  |
-|------------------|------------------------------------------------------------------|----------|
+| ---------------- | ---------------------------------------------------------------- | -------- |
 | chrom1           | chromosome of the first breakpoint of the SV in “UCSC style”     | chr12    |
 | pos1             | genomic position of the first breakpoint of the SV               | 43100001 |
 | chrom2           | chromosome of the second breakpoint of the SV in “UCSC style”    | chr12    |
@@ -196,7 +200,7 @@ ID of the respective sample. The file is formatted as tab separated
 values with header and contains the following columns:
 
 | Column name      | Description                  | Example                       |
-|------------------|------------------------------|-------------------------------|
+| ---------------- | ---------------------------- | ----------------------------- |
 | sample_id        | ID of the tumor sample       | ICGC_MB1                      |
 | CNA_file         | Path to the CNA file         | /path/to/CNA_file.txt         |
 | somatic_SNV_file | Path to the somatic SNV file | /path/to/somatic_SNV_file.txt |
@@ -207,7 +211,7 @@ values with header and contains the following columns:
 ### TAD file
 
 | Column name | Description                              | Example  |
-|-------------|------------------------------------------|----------|
+| ----------- | ---------------------------------------- | -------- |
 | chrom       | chromosome of TAD region in “UCSC style” | chr12    |
 | start       | start of TAD region                      | 12345678 |
 | end         | end of TAD region                        | 12387654 |
@@ -221,7 +225,7 @@ formatted as tab separated values with header and contains the following
 columns:
 
 | Column name | Description                                     | Example  |
-|-------------|-------------------------------------------------|----------|
+| ----------- | ----------------------------------------------- | -------- |
 | chrom       | chromosome of regulatory region in “UCSC style” | chr12    |
 | start       | start of the regulatory region                  | 34897132 |
 | end         | end of the regulatory region                    | 34899132 |
@@ -230,8 +234,8 @@ columns:
 \* These columns are annotative only. Thus, no calculations are based on
 their values.
 
-If no ChIP-seq data is available, set the *chipseq_file_path argument*
-in the *run* function to *NULL*.
+If no ChIP-seq data is available, set the _chipseq_file_path argument_
+in the _run_ function to _NULL_.
 
 ## Reference files for the whole cohort
 
@@ -245,7 +249,7 @@ with Revana). The file is formatted as tab separated values with header
 and contains the following columns:
 
 | Column name                   | Description                                                                                                         | Example        |
-|-------------------------------|---------------------------------------------------------------------------------------------------------------------|----------------|
+| ----------------------------- | ------------------------------------------------------------------------------------------------------------------- | -------------- |
 | chrom                         | chromosome of the gene in “UCSC style”                                                                              | chr12          |
 | start                         | start of the gene                                                                                                   | 34890132       |
 | end                           | end of the gene                                                                                                     | 34895132       |
@@ -264,7 +268,7 @@ their values.
 ### Exon Annotation Reference file
 
 | Column name | Description                                    | Example  |
-|-------------|------------------------------------------------|----------|
+| ----------- | ---------------------------------------------- | -------- |
 | chrom       | chromosome of the exon in “UCSC style”         | chr12    |
 | start       | start of the exon                              | 34890132 |
 | end         | end of the exon                                | 34895132 |
@@ -299,7 +303,7 @@ Required reference/input data with Revana. The file is formatted as tab
 separated values with header and contains the following columns:
 
 | Column name  | Description                                              | Example             |
-|--------------|----------------------------------------------------------|---------------------|
+| ------------ | -------------------------------------------------------- | ------------------- |
 | motif_id     | the motif ID as used in the reference MEME file          | AHR_HUMAN.H11MO.0.B |
 | tf_gene_name | transcription factor gene name associated with the motif | AHR                 |
 
@@ -316,7 +320,7 @@ Create Required reference/input data with Revana). The file is formatted
 as tab separated values with header and contains the following columns:
 
 | Column name            | Description                                                                                  | Example   |
-|------------------------|----------------------------------------------------------------------------------------------|-----------|
+| ---------------------- | -------------------------------------------------------------------------------------------- | --------- |
 | chrom                  | chromosome of the GeneHancer region in “UCSC style”                                          | chr12     |
 | feature_name\*         | the name of the feature                                                                      | Enhancer  |
 | start                  | start of the GeneHancer region                                                               | 12300000  |
@@ -332,8 +336,8 @@ as tab separated values with header and contains the following columns:
 their values.
 
 If you want to run Revana without GeneHancer functionality, set the
-*genehancer_ref_file_path* argument in the run function argument to
-*NULL*.
+_genehancer_ref_file_path_ argument in the run function argument to
+_NULL_.
 
 # 3 - Create Required Reference/Input Data with Revana
 
@@ -343,7 +347,7 @@ For the case, that the RNA read counts for the marker SNPs are not
 readily available, Revana provides a function that extracts RNA read
 counts from the RNA-seq .bam file and adds them to the marker file.
 
-``` r
+```r
 add_RNA_read_count_to_markers(
   # path to the RNA-seq .bam file
   RNA_bam_file = RNA_bam_file,
@@ -379,17 +383,17 @@ and/or cancer gene data but is not recommended.
 The following function creates the required gene and exon annotation
 reference files
 
-``` r
+```r
 prepare_gene_annotation_ref_file(
   # path to the gencode GTF file
   gencode_gtf_file_path = gencode_gtf_file_path,
   # path to the imprint_genes_file_path OR empty string (“”)
   imprint_genes_file_path = imprint_genes_file_path,
-  # path to the cancer gene file OR empty string (“”) 
+  # path to the cancer gene file OR empty string (“”)
   cancer_gene_file_path = cancer_gene_file_path,
   # output path for the gene annotation file
   ref_file_output_path = ref_file_output_path,
-  # output path for the exon annotation 
+  # output path for the exon annotation
   ref_file_output_path_exons = ref_file_output_path_exons
 )
 ```
@@ -410,28 +414,28 @@ Revana via the following functions.
 
 Import the data from Excel:
 
-``` r
+```r
 library("readxl")
 genehancer_data <- readxl::read_excel("path/to/Genehancer_version_X.xlsx")
 ```
 
 Import the data from GFF format:
 
-``` r
+```r
 library("readr")
 genehancer_data <- readr::read_tsv("path/to/genehancer.gff")
 ```
 
 Supply paths for elite status data if available:
 
-``` r
+```r
 genehancer_element_elite_status_file_path <- "path/to/Genehancer_element_elite_status.txt"
 genehancer_gene_associations_scores_file_path <- "path/to/Genehancer_gene_associations_scores.txt"
 ```
 
 Create GeneHancer Ref file for Revana:
 
-``` r
+```r
 prepare_genehancer_ref_file(
   # import data like described above
   genehancer_data,
@@ -451,10 +455,10 @@ prepare_genehancer_ref_file(
 ```
 
 GeneHancer coordinates are provided according to GRCh38 (hg38). By
-default, this function (*prepare_genehancer_ref_file*) lifts over the
+default, this function (_prepare_genehancer_ref_file_) lifts over the
 coordinates to GRCh37 (hg37). If you plan to run Revana with GRCh38
-coordinates, set the *skip_lifting_over* argument in the function to
-*TRUE*.
+coordinates, set the _skip_lifting_over_ argument in the function to
+_TRUE_.
 
 ## FIMO Motif Id - TF Gene Name Conversion Table File
 
@@ -464,7 +468,7 @@ e.g. <https://hocomoco11.autosome.org/final_bundle/hocomoco11/core/HUMAN/mono/H
 . After the download convert the file to the required format with the
 following function:
 
-``` r
+```r
 prepare_motif_id_tf_gene_name_table_from_HOCOMOCO_annotation_tsv(
   # path to the annotation file
   annotation_file_path = annotation_file_path,
@@ -479,13 +483,13 @@ With all input and reference prepared Revana can be easily run within R.
 
 First load the package into the R workspace.
 
-``` r
+```r
 library(revana)
 ```
 
 Then run Revana with the following command:
 
-``` r
+```r
 run(
   # path to the paths file
   paths_file_path = paths_file_path,
@@ -517,12 +521,12 @@ run(
 ```
 
 Revana can also be run without providing ChIP-Seq or GeneHancer files.
-In this case set the respective arguments to *NULL*.
+In this case set the respective arguments to _NULL_.
 
 After Revana has run the interactive HTML report can be generated like
 this:
 
-``` r
+```r
 create_HTML_report_new(
   # output directory, where the HTML report should be stored
   HTML_report_output_dir_path,
@@ -533,7 +537,7 @@ create_HTML_report_new(
 )
 ```
 
-The *output_paths_file_path* argument describes the path to the results
+The _output_paths_file_path_ argument describes the path to the results
 paths file. After Revana has run, it creates a file containing all the
 paths of the established results. To supply fewer arguments to the
 function, this file is designed to be used as input for the HTML report
@@ -542,7 +546,7 @@ one HTML report, the results paths files have to be merged before
 supplying them as argument to the create_HTML_report_new function. This
 can be done like this
 
-``` r
+```r
 merge_results_paths_files(list_of_results_paths_file_paths=list(path_subgroup1, path_subgroup2))
 ```
 
@@ -555,12 +559,12 @@ reference genome (e.g. because the supplied input date refers to a
 different assembly), you have to make the following adaptions to the
 standard workflow.
 
--   Use a compatible gene annotation from Gencode. For GRCh38 (hg38) you
-    find the corresponding GTF file for download under
-    <https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_40/gencode.v40.annotation.gtf.gz>
--   Create the genehancer reference file in GRCh38 format by using:
+- Use a compatible gene annotation from Gencode. For GRCh38 (hg38) you
+  find the corresponding GTF file for download under
+  <https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_40/gencode.v40.annotation.gtf.gz>
+- Create the genehancer reference file in GRCh38 format by using:
 
-``` r
+```r
 prepare_genehancer_ref_file(
   ...,
   # should the liftover from hg38 to hg 19 coordinates be skipped
@@ -568,17 +572,17 @@ prepare_genehancer_ref_file(
 )
 ```
 
--   Supply a reference_genome argument to the run function. E.g. for
-    GRCh38 (hg38):
+- Supply a reference_genome argument to the run function. E.g. for
+  GRCh38 (hg38):
 
-``` r
+```r
 # install hg38 genome if not installed yet
 if (!require("BiocManager", quietly = TRUE))
     install.packages("BiocManager")
 
 BiocManager::install("BSgenome.Hsapiens.UCSC.hg38")
 reference_genome <- BSgenome.Hsapiens.UCSC.hg38::Hsapiens
- 
+
 run(
 paths_file_path = paths_file_path,
 gene_annotation_ref_file_path = gene_annotation_ref_file_path,
@@ -586,7 +590,7 @@ gene_annotation_exons_ref_file_path = gene_annotation_exons_ref_file_path,
 fimo_motif_ref_path = fimo_motif_ref_path,
 TAD_file_path = TAD_file_path,
 chipseq_file_path = chipseq_file_path,
-genehancer_ref_file_path = genehancer_ref_file_path, 
+genehancer_ref_file_path = genehancer_ref_file_path,
 run_tf_binding_site_analysis = FALSE
 subgroup_name = “SUBGROUP_NAME”
 # GRCh38 genome assembly is used as follows
@@ -594,12 +598,12 @@ reference_genome = reference_genome
 )
 ```
 
--   Supply the genome name when using *create_HTML_report_new*. E.g. for
-    GRCh38 (hg38):
+- Supply the genome name when using _create_HTML_report_new_. E.g. for
+  GRCh38 (hg38):
 
-``` r
+```r
 create_HTML_report_new(
-  HTML_report_output_dir_path, 
+  HTML_report_output_dir_path,
   output_paths_file_path = output_paths_file_path,
   has_run_tf_binding_site_analysis = FALSE,
   genome_name = “hg38”
@@ -617,16 +621,15 @@ SNVs is limited though.
 
 Nevertheless transcription factor analysis can be a useful descriptive
 feature. Revana provides means of TF binding site analysis in a similar,
-but slightly enhanced fashion as cis-X. It uses the FIMO (Grant et al.,
-2011) tool from the MEME Suite to conduct the TF motif analysis.
+but slightly enhanced fashion as cis-X. It uses the FIMO (Grant et al., 2011) tool from the MEME Suite to conduct the TF motif analysis.
 
 Depending on the number of somatic SNVs of the tumors under
 investigation TF binding analysis can be a computationally expensive
 operation and increase time, memory, and space consumption of Revana
 significantly. It is therefore disabled by default. To use the feature
-set *run_tf_binding_site_analysis = TRUE* to Revana’s *run* function and
-*has_run_tf_binding_site_analysis = TRUE* to Revana’s
-\_create_HTM\_report_new function. **As the transcription factor binding
+set _run_tf_binding_site_analysis = TRUE_ to Revana’s _run_ function and
+_has_run_tf_binding_site_analysis = TRUE_ to Revana’s
+\_create_HTM_report_new function. **As the transcription factor binding
 site analysis feature uses the MEME suite as external dependency, make
 sure to have it installed and accessible in your current environment
 PATH.** You can find instructions on how to install MEME suite under
