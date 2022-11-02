@@ -137,7 +137,7 @@ their values.
 ℹ️ Difference between the Copy number file and the CNA file:
 
 The **copy number** file provides Revana with the determined read coverage ratio of genomic ranges across the entire genome.
-The **CNA file** provides only those genomic regions that are considered as abberant by the user. Therefor, the filtering of this input files determines which copy number alterations are considered as real somatic genomic events.
+The **CNA file** provides only those genomic regions that are considered as abberant by the user. Therefore, the filtering of this input files determines which copy number alterations are considered as tumor-specific somatic genomic events.
 
 ### Somatic SNV file
 
