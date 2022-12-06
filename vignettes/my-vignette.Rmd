@@ -1,9 +1,6 @@
 ---
 title: "Revana-Documentation"
-output:
-  html_document:
-    toc: true
-    theme: journal
+output: rmarkdown::html_vignette
 abstract: Revana is a comprehensive tool for regulatory variant detection. It can detect, analyse, and illustrate regulatory variants of different kinds. It works on whole genome (WGS) and RNA sequencing (RNA-Seq) data of a cohort of tumor samples and creates interactive HTML reports summarizing the most important regulatory events.<br/><br/>
 
 vignette: >
@@ -19,6 +16,18 @@ knitr::opts_chunk$set(
 )
 ```
 
+
+<br/><br/>
+
+# Overview
+
+This document provides documentation for the _Revana_ R package.
+
+📎 Find this documentation as HTML rendered R markdown [here](about:blank) or as Github README [here](https://github.com/KiTZ-Heidelberg/Revana) 
+
+📖 Find the installation and usage walkthrough with demo data [here](https://github.com/KiTZ-Heidelberg/revana-demo-data)
+
+📊 Find Revana's HTML results report of our demonstration cohort [here](https://kitz-heidelberg.github.io/revana-demo-report/report.html)
 
 <br/><br/>
 
@@ -74,6 +83,11 @@ The CNA file contains somatic copy number alterations (CNAs), that is regions wi
 |log2*|log2 of the coverage ratio of the genomic region of the CNA|0.48|
 
 \* These columns are annotative only. Thus, no calculations are based on their values.
+
+ℹ️ Difference between the Copy number file and the CNA file:
+
+The **copy number** file provides Revana with the determined read coverage ratio of genomic ranges across the entire genome.
+The **CNA file** provides only those genomic regions that are considered as abberant by the user. Therefore, the filtering of this input files determines which copy number alterations are considered as tumor-specific somatic genomic events.
 
 ### Somatic SNV file
 This file contains somatic single nucleotide variants (SNVs) and small insertions and deletions (InDels). The file is formatted as tab separated values with header and contains the following columns:

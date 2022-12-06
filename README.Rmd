@@ -3,6 +3,9 @@ title: "Revana-Documentation"
 output: 
   github_document:
     toc: true
+    html_preview: false
+  html_document:
+    toc: true
 abstract: Revana is a comprehensive tool for regulatory variant detection. It can detect, analyse, and illustrate regulatory variants of different kinds. It works on whole genome (WGS) and RNA sequencing (RNA-Seq) data of a cohort of tumor samples and creates interactive HTML reports summarizing the most important regulatory events.<br/><br/>
 
 vignette: >
@@ -18,6 +21,18 @@ knitr::opts_chunk$set(
 )
 ```
 
+
+<br/><br/>
+
+# Overview
+
+This document provides documentation for the _Revana_ R package.
+
+📎 Find this documentation as HTML rendered R markdown [here](about:blank) or as Github README [here](https://github.com/KiTZ-Heidelberg/Revana) 
+
+📖 Find the installation and usage walkthrough with demo data [here](https://github.com/KiTZ-Heidelberg/revana-demo-data)
+
+📊 Find Revana's HTML results report of our demonstration cohort [here](https://kitz-heidelberg.github.io/revana-demo-report/report.html)
 
 <br/><br/>
 
