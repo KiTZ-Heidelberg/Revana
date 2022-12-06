@@ -67,8 +67,8 @@ Revana-Documentation
 This document provides documentation for the *Revana* R package.
 
 📎 Find this documentation as HTML rendered R markdown
-[here](about:blank) or as Github README
-[here](https://github.com/KiTZ-Heidelberg/Revana)
+[here](https://kitz-heidelberg.github.io/Revana/README.html) or as
+Github README [here](https://github.com/KiTZ-Heidelberg/Revana)
 
 📖 Find the installation and usage walkthrough with demo data
 [here](https://github.com/KiTZ-Heidelberg/revana-demo-data)

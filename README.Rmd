@@ -28,7 +28,7 @@ knitr::opts_chunk$set(
 
 This document provides documentation for the _Revana_ R package.
 
-📎 Find this documentation as HTML rendered R markdown [here](about:blank) or as Github README [here](https://github.com/KiTZ-Heidelberg/Revana) 
+📎 Find this documentation as HTML rendered R markdown [here](https://kitz-heidelberg.github.io/Revana/README.html) or as Github README [here](https://github.com/KiTZ-Heidelberg/Revana) 
 
 📖 Find the installation and usage walkthrough with demo data [here](https://github.com/KiTZ-Heidelberg/revana-demo-data)
 
