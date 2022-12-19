@@ -164,18 +164,135 @@ plot_cis_activated_samples_per_gene_bar_plot <- function(processed_data,
 }
 
 create_all_cis_activated_samples_per_gene_bar_plots <- function(processed_data, color_palette, HTML_report_figure_directory) {
-    # a.k. toggle plot
-    for (copy_number_normalized in c(FALSE, TRUE)) {
-        if (copy_number_normalized == TRUE) {
-            temp_df1 <- processed_data$cis_activation_summary_table_mut_info %>%
-                dplyr::filter(cis_activated_gene_copy_number_normalized == TRUE)
-        } else {
-            temp_df1 <- processed_data$cis_activation_summary_table_mut_info %>%
-                dplyr::filter(cis_activated_gene == TRUE)
-        }
+    cat("Creating togglable plots...\n")
+    progressr::with_progress({
+        p <- progressr::progressor(steps = 960)
 
-        for (mutation_type in c("all", "SV_only", "CNA_only", "somatic_SNV_only", "relevant_somatic_SNV_only")) {
-            for (matched_TAD in c("anywhere", "gene", "genehancer", "chipseq")) {
+        # a.k. toggle plot
+        for (copy_number_normalized in c(FALSE, TRUE)) {
+            if (copy_number_normalized == TRUE) {
+                temp_df1 <- processed_data$cis_activation_summary_table_mut_info %>%
+                    dplyr::filter(cis_activated_gene_copy_number_normalized == TRUE)
+            } else {
+                temp_df1 <- processed_data$cis_activation_summary_table_mut_info %>%
+                    dplyr::filter(cis_activated_gene == TRUE)
+            }
+
+            for (mutation_type in c("all", "SV_only", "CNA_only", "somatic_SNV_only", "relevant_somatic_SNV_only")) {
+                for (matched_TAD in c("anywhere", "gene", "genehancer", "chipseq")) {
+                    temp_df2 <- temp_df1 %>%
+                        dplyr::mutate(n_muts_of_mut_type = dplyr::case_when(
+                            (matched_TAD == "anywhere") & (mutation_type == "all") ~ n_muts,
+                            (matched_TAD == "anywhere") & (mutation_type == "SV_only") ~ n_SVs,
+                            (matched_TAD == "anywhere") & (mutation_type == "CNA_only") ~ n_CNAs,
+                            (matched_TAD == "anywhere") & (mutation_type == "somatic_SNV_only") ~ n_somatic_SNVs,
+                            (matched_TAD == "anywhere") & (mutation_type == "relevant_somatic_SNV_only") ~ n_relevant_somatic_SNVs_valid_for_cis_activated_genes,
+                            (matched_TAD == "gene") & (mutation_type == "all") ~ n_muts_from_gene_TAD,
+                            (matched_TAD == "gene") & (mutation_type == "SV_only") ~ n_SVs_from_gene_TAD,
+                            (matched_TAD == "gene") & (mutation_type == "CNA_only") ~ n_CNAs_from_gene_TAD,
+                            (matched_TAD == "gene") & (mutation_type == "somatic_SNV_only") ~ n_somatic_SNVs_from_gene_TAD,
+                            (matched_TAD == "gene") & (mutation_type == "relevant_somatic_SNV_only") ~ n_relevant_somatic_SNVs_from_gene_TAD_valid_for_cis_activated_genes,
+                            (matched_TAD == "genehancer") & (mutation_type == "all") ~ n_muts_from_genehancer_TAD,
+                            (matched_TAD == "genehancer") & (mutation_type == "SV_only") ~ n_SVs_from_genehancer_TAD,
+                            (matched_TAD == "genehancer") & (mutation_type == "CNA_only") ~ n_CNAs_from_genehancer_TAD,
+                            (matched_TAD == "genehancer") & (mutation_type == "somatic_SNV_only") ~ n_somatic_SNVs_from_genehancer_TAD,
+                            (matched_TAD == "genehancer") & (mutation_type == "relevant_somatic_SNV_only") ~ n_relevant_somatic_SNVs_from_genehancer_TAD_valid_for_cis_activated_genes,
+                            (matched_TAD == "chipseq") & (mutation_type == "all") ~ n_muts_with_chipseq,
+                            (matched_TAD == "chipseq") & (mutation_type == "SV_only") ~ n_SVs_with_chipseq,
+                            (matched_TAD == "chipseq") & (mutation_type == "CNA_only") ~ n_CNAs_with_chipseq,
+                            (matched_TAD == "chipseq") & (mutation_type == "somatic_SNV_only") ~ n_somatic_SNVs_with_chipseq,
+                            (matched_TAD == "chipseq") & (mutation_type == "relevant_somatic_SNV_only") ~ n_relevant_somatic_SNVs_with_chipseq_valid_for_cis_activated_genes,
+                            TRUE ~ n_muts
+                        )) %>%
+                        dplyr::group_by(gene_name) %>%
+                        dplyr::mutate(n_cis_activated_samples_across_cohort = dplyr::n()) %>%
+                        dplyr::mutate(n_cis_activated_samples_with_mut_across_cohort = sum(n_muts_of_mut_type > 0)) %>%
+                        dplyr::ungroup()
+
+                    alpha_scale_name <-
+                        generate_alpha_scale_label_for_cis_activated_samples_per_gene_bar_plot(matched_TAD, mutation_type)
+
+                    for (sort_by in c("occurrence", "mutations")) {
+                        if (sort_by == "occurrence") {
+                            temp_df3 <- temp_df2 %>%
+                                dplyr::mutate(gene_name = forcats::fct_reorder(gene_name, n_cis_activated_samples_across_cohort))
+                        }
+                        if (sort_by == "mutations") {
+                            temp_df3 <- temp_df2 %>%
+                                dplyr::mutate(gene_name = forcats::fct_reorder(gene_name, n_cis_activated_samples_with_mut_across_cohort))
+                        }
+
+                        for (filter_occurrence in c(1, 2, 3)) {
+                            temp_df4 <- temp_df3 %>%
+                                dplyr::filter(n_cis_activated_samples_across_cohort >= filter_occurrence)
+
+                            for (filter_mutations in c(0, 1)) {
+                                temp_df5 <- temp_df4 %>%
+                                    dplyr::filter(n_cis_activated_samples_with_mut_across_cohort >= filter_mutations)
+
+
+
+                                for (pc_only in c(TRUE, FALSE)) {
+                                    final_df <- temp_df5 %>%
+                                        dplyr::filter(gene_type == "protein_coding" | (!pc_only))
+
+                                    cis_activated_samples_per_gene_across_cohort_bar_plot_path <- file.path(HTML_report_figure_directory, paste0("cis_activated_samples", ifelse(copy_number_normalized, "__copy_number_normalized_", ""), "_per_gene_across_cohort_bar_plot___matched_TAD_", matched_TAD, "__mutation_type_", mutation_type, "__filter_occurrence_", filter_occurrence, "__filter_mutations_", filter_mutations, "__sort_", sort_by, ifelse(pc_only, "__pc_only", ""), ".svg"))
+
+                                    plot_cis_activated_samples_per_gene_bar_plot_integrated(final_df, color_palette, alpha_scale_name) %>%
+                                        save_ggplot(cis_activated_samples_per_gene_across_cohort_bar_plot_path)
+
+                                    p()
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    })
+}
+
+create_all_cis_activated_samples_per_gene_bar_plots_PARALLELIZATION <- function(processed_data, color_palette, HTML_report_figure_directory) {
+    # a.k. toggle plot
+    future::plan(future::multisession)
+
+    cat("Creating togglable plots... (on ")
+    cat(future::nbrOfWorkers())
+    cat(" workers)\n")
+
+    progressr::with_progress({
+        p <- progressr::progressor(steps = 960)
+    
+        for (copy_number_normalized in c(FALSE, TRUE)) {
+            if (copy_number_normalized == TRUE) {
+                temp_df1 <- processed_data$cis_activation_summary_table_mut_info %>%
+                    dplyr::filter(cis_activated_gene_copy_number_normalized == TRUE)
+            } else {
+                temp_df1 <- processed_data$cis_activation_summary_table_mut_info %>%
+                    dplyr::filter(cis_activated_gene == TRUE)
+            }
+
+            # OPTIMAL PLACE TO INITIALIZE PARALLELIZATION
+
+            mutation_type_array <- character(20)
+            matched_TAD_array <- character(20)
+            iterators <- numeric(20)
+
+            iterator <- 1
+
+            for (mutation_type in c("all", "SV_only", "CNA_only", "somatic_SNV_only", "relevant_somatic_SNV_only")) {
+                for (matched_TAD in c("anywhere", "gene", "genehancer", "chipseq")) {
+                    mutation_type_array[iterator] <- mutation_type
+                    matched_TAD_array[iterator] <- matched_TAD
+                    iterators[iterator] <- iterator
+                    iterator <- iterator + 1
+                }
+            }
+
+            furrr::future_walk(iterators, function(i) {
+                mutation_type <- mutation_type_array[i]
+                matched_TAD <- matched_TAD_array[i]
+
                 temp_df2 <- temp_df1 %>%
                     dplyr::mutate(n_muts_of_mut_type = dplyr::case_when(
                         (matched_TAD == "anywhere") & (mutation_type == "all") ~ n_muts,
@@ -236,13 +353,15 @@ create_all_cis_activated_samples_per_gene_bar_plots <- function(processed_data, 
 
                                 plot_cis_activated_samples_per_gene_bar_plot_integrated(final_df, color_palette, alpha_scale_name) %>%
                                     save_ggplot(cis_activated_samples_per_gene_across_cohort_bar_plot_path)
+
+                                p()
                             }
                         }
                     }
                 }
-            }
+            })
         }
-    }
+    })
 }
 
 create_HTML_for_cis_activated_samples_per_gene_bar_plots <- function() {

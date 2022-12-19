@@ -5,6 +5,7 @@
 #' @param subgroup_name Name of the subgroup. The name of the subgroup is used as reference in later created HTML reports
 #' @param skip_merging_Rds_chunks Logical value. Should data chunks stored in .Rds-files be merged together. Default is TRUE - this step is required for regular report generation.
 #' @param run_tf_binding_site_analysis Was TF binding site analysis conducted?
+#' @param verbose should verbose logging be activated? (TRUE / FALSE)
 #' @details
 #' Step 5 of the revana workflow ...
 #' * merges .Rds file chunks (if skip_merging_Rds_chunks == TRUE)
@@ -17,7 +18,8 @@ run_step5_per_cohort <- function(paths_file_path,
                                  output_dir,
                                  subgroup_name = "DEFAULT_GROUP",
                                  skip_merging_Rds_chunks = FALSE,
-                                 run_tf_binding_site_analysis = TRUE) {
+                                 run_tf_binding_site_analysis = TRUE,
+                                 verbose = FALSE) {
     # import paths file  -------------------------------------
     paths <- import_paths_file(paths_file_path, check_file_table_headers = T)
 
@@ -36,19 +38,22 @@ run_step5_per_cohort <- function(paths_file_path,
                     merge_Rds_chunks(
                         pattern = paste0(s_id, "\\.somatic_SNV_tf_binding_data\\.genehancer\\.all\\.", "__chunk_[[:digit:]]+\\.Rds"),
                         folder = sample_dir_path,
-                        output_file_path = file.path(sample_dir_path, paste0(s_id, ".somatic_SNV_tf_binding_data.genehancer.all.Rds"))
+                        output_file_path = file.path(sample_dir_path, paste0(s_id, ".somatic_SNV_tf_binding_data.genehancer.all.Rds")),
+                        verbose = verbose
                     )
                     # somatic_SNV_tf_binding_data.genehancer.cis_activated_only.Rds
                     merge_Rds_chunks(
                         pattern = paste0(s_id, "\\.somatic_SNV_tf_binding_data\\.genehancer\\.cis_activated_only\\.", "__chunk_[[:digit:]]+\\.Rds"),
                         folder = sample_dir_path,
-                        output_file_path = file.path(sample_dir_path, paste0(s_id, ".somatic_SNV_tf_binding_data.genehancer.cis_activated_only.Rds"))
+                        output_file_path = file.path(sample_dir_path, paste0(s_id, ".somatic_SNV_tf_binding_data.genehancer.cis_activated_only.Rds")),
+                        verbose = verbose
                     )
                     # somatic_SNV_tf_binding_data.genehancer.cis_activated_only.relevant_only.Rds
                     merge_Rds_chunks(
                         pattern = paste0(s_id, "\\.somatic_SNV_tf_binding_data\\.genehancer\\.cis_activated_only\\.relevant_only\\.", "__chunk_[[:digit:]]+\\.Rds"),
                         folder = sample_dir_path,
-                        output_file_path = file.path(sample_dir_path, paste0(s_id, ".somatic_SNV_tf_binding_data.genehancer.cis_activated_only.relevant_only.Rds"))
+                        output_file_path = file.path(sample_dir_path, paste0(s_id, ".somatic_SNV_tf_binding_data.genehancer.cis_activated_only.relevant_only.Rds")),
+                        verbose = verbose
                     )
 
                     # # somatic_SNV_tf_binding_data.genes.all.Rds
@@ -61,13 +66,15 @@ run_step5_per_cohort <- function(paths_file_path,
                     merge_Rds_chunks(
                         pattern = paste0(s_id, "\\.somatic_SNV_tf_binding_data\\.genes\\.cis_activated_only\\.", "__chunk_[[:digit:]]+\\.Rds"),
                         folder = sample_dir_path,
-                        output_file_path = file.path(sample_dir_path, paste0(s_id, ".somatic_SNV_tf_binding_data.genes.cis_activated_only.Rds"))
+                        output_file_path = file.path(sample_dir_path, paste0(s_id, ".somatic_SNV_tf_binding_data.genes.cis_activated_only.Rds")),
+                        verbose = verbose
                     )
                     # somatic_SNV_tf_binding_data.genes.cis_activated_only.relevant_only.Rds
                     merge_Rds_chunks(
                         pattern = paste0(s_id, "\\.somatic_SNV_tf_binding_data\\.genes\\.cis_activated_only\\.relevant_only\\.", "__chunk_[[:digit:]]+\\.Rds"),
                         folder = sample_dir_path,
-                        output_file_path = file.path(sample_dir_path, paste0(s_id, ".somatic_SNV_tf_binding_data.genes.cis_activated_only.relevant_only.Rds"))
+                        output_file_path = file.path(sample_dir_path, paste0(s_id, ".somatic_SNV_tf_binding_data.genes.cis_activated_only.relevant_only.Rds")),
+                        verbose = verbose
                     )
                 }
             }

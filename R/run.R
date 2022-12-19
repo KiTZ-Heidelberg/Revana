@@ -12,11 +12,13 @@
 #' @param subgroup_name Name of the subgroup. The name of the subgroup is used as reference in later created HTML reports
 #' @param run_tf_binding_site_analysis Should TF binding site analysis be conducted?
 #' @param reference_genome Which genome should be used. Default (NULL) uses Human Genome build GRCh37 (hg19)
+#' @param verbose should verbose logging be activated? (TRUE / FALSE)
+#' @param use_parallelization should parallelization be used to speed up Revana (TRUE / FALSE), defaults to TRUE
 #'
 #'
 #' @export
 
-run <- function(paths_file_path,
+run_analysis <- function(paths_file_path,
                 output_dir,
                 gene_annotation_ref_file_path,
                 gene_annotation_exons_ref_file_path,
@@ -27,10 +29,20 @@ run <- function(paths_file_path,
                 chipseq_file_path = NULL,
                 subgroup_name = "DEFAULT_GROUP",
                 run_tf_binding_site_analysis = FALSE,
-                reference_genome = NULL) {
-    cat("Running Revana ...\n")
+                reference_genome = NULL,
+                verbose = FALSE,
+                use_parallelization = TRUE) {
+    
     cat("\n")
-    cat("Running Step 1 ...\n")
+    if(verbose == TRUE) {
+        log_msg("ANALYSIS STARTED", log_time = verbose)
+        cat("\n")
+    }
+
+    log_msg("Running Revana ...", log_time = FALSE)
+    cat("\n")
+    log_msg("Running Step 1 ...", log_time = FALSE)
+
     run_step1_per_cohort(
         paths_file_path,
         output_dir,
@@ -44,40 +56,66 @@ run <- function(paths_file_path,
         run_tf_binding_site_analysis,
         reference_genome
     )
-    cat("Running Step 2 ...\n")
-    run_step2_per_cohort(
-        paths_file_path,
-        output_dir,
-        gene_annotation_ref_file_path,
-        gene_annotation_exons_ref_file_path,
-        fimo_motif_ref_path,
-        motif_id_tf_gene_name_table_path,
-        run_tf_binding_site_analysis,
-        reference_genome
-    )
-    cat("Running Step 3 ...\n")
+
+    log_msg("Running Step 2 ...", log_time = FALSE)
+    if(use_parallelization == TRUE){
+        run_step2_per_cohort(
+            paths_file_path,
+            output_dir,
+            gene_annotation_ref_file_path,
+            gene_annotation_exons_ref_file_path,
+            fimo_motif_ref_path,
+            motif_id_tf_gene_name_table_path,
+            run_tf_binding_site_analysis,
+            reference_genome,
+            verbose
+        )
+    }else{
+        run_step2_per_cohort_serial(
+            paths_file_path,
+            output_dir,
+            gene_annotation_ref_file_path,
+            gene_annotation_exons_ref_file_path,
+            fimo_motif_ref_path,
+            motif_id_tf_gene_name_table_path,
+            run_tf_binding_site_analysis,
+            reference_genome,
+            verbose
+        )
+    }
+    
+
+    log_msg("Running Step 3 ...", log_time = FALSE)
     run_step3_per_cohort(
         paths_file_path,
         output_dir,
         gene_annotation_ref_file_path,
         TAD_file_path,
         genehancer_ref_file_path,
-        chipseq_file_path
+        chipseq_file_path,
+        verbose
     )
-    cat("Running Step 4 ...\n")
+
+    log_msg("Running Step 4 ...", log_time = FALSE)
     run_step4_per_cohort(
         paths_file_path,
         output_dir,
         TAD_file_path,
-        run_tf_binding_site_analysis
+        run_tf_binding_site_analysis,
+        verbose,
+        use_parallelization
     )
-    cat("Running Step 5 ...\n")
+
+    log_msg("Running Step 5 ...", log_time = FALSE)
     run_step5_per_cohort(
         paths_file_path,
         output_dir,
         subgroup_name,
-        run_tf_binding_site_analysis = run_tf_binding_site_analysis
+        run_tf_binding_site_analysis = run_tf_binding_site_analysis,
+        verbose
     )
-    cat("COMPLETED\n")
+
+    cat("\n")
+    log_msg("ANALYSIS COMPLETED", log_time = verbose)
     cat("\n")
 }

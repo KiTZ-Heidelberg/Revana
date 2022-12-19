@@ -35,7 +35,11 @@ add_cis_expression_filter_columns <- function(merged_table,
     )]
 
     # ASE filter ------------------------------
-    merged_table[, passed_ASE_filter := ABH <= threshold_max_ASE_ABH]
+
+        # multtest ABH is invalid sometimes (-> see calculate_ASE.R)
+        # under these circumstances use the more conservative Bonferroni
+
+    merged_table[, passed_ASE_filter := ifelse(is.na(ABH), Bonferroni <= threshold_max_ASE_ABH, ABH <= threshold_max_ASE_ABH) ]
     # data.table::setnafill(merged_table, type="const", fill=FALSE, nan=NA, cols=c("passed_ASE_filter"))
 
     merged_table[, ASE_filter_rescued_oncogene := FALSE]

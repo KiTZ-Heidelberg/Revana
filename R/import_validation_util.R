@@ -6,7 +6,6 @@
 #' @param path provided path for the file that gets checked for existence
 #' @param name_of_file_type name of the file type
 #'
-#' @return
 #'
 #' @examples
 #' check_file_existence("/invalidpath/invalidfile.txt", name_of_file_type = "important text file")

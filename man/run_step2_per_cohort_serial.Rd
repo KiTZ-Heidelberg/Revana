@@ -12,7 +12,8 @@ run_step2_per_cohort_serial(
   fimo_motif_ref_path = NULL,
   motif_id_tf_gene_name_table_path = NULL,
   run_tf_binding_site_analysis = TRUE,
-  reference_genome = NULL
+  reference_genome = NULL,
+  verbose = FALSE
 )
 }
 \arguments{

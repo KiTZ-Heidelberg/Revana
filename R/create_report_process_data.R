@@ -62,8 +62,10 @@ process_data_for_HTML_report <- function(data, has_run_tf_binding_site_analysis)
         dplyr::select(sample_ID, gene_name, cis_activated_gene, sv_break1_chrom, sv_break1_pos, sv_break2_chrom, sv_break2_pos, sv_type, eventInversion, TAD_sv_break1_chrom, TAD_sv_break2_chrom, TAD_sv_break1_start, TAD_sv_break2_start, TAD_sv_break1_end, TAD_sv_break2_end, TAD_combination) %>%
         dplyr::distinct()
 
-    GenomeInfoDb::seqlevelsStyle(SV_all_merged_table$sv_break1_chrom) <- "UCSC"
-    GenomeInfoDb::seqlevelsStyle(SV_all_merged_table$sv_break2_chrom) <- "UCSC"
+    if(nrow(SV_all_merged_table) > 0){
+        GenomeInfoDb::seqlevelsStyle(SV_all_merged_table$sv_break1_chrom) <- "UCSC"
+        GenomeInfoDb::seqlevelsStyle(SV_all_merged_table$sv_break2_chrom) <- "UCSC"
+    }
     SV_all_merged_table <- SV_all_merged_table %>% dplyr::distinct()
 
     CNA_all_merged_table <- data.table::rbindlist(
@@ -74,7 +76,9 @@ process_data_for_HTML_report <- function(data, has_run_tf_binding_site_analysis)
         dplyr::select(sample_ID, gene_name, cis_activated_gene, cna_chrom, cna_start, cna_end, copy_number, CNA_type, log2) %>%
         dplyr::distinct()
 
-    GenomeInfoDb::seqlevelsStyle(CNA_all_merged_table$cna_chrom) <- "UCSC"
+    if(nrow(CNA_all_merged_table) > 0){
+        GenomeInfoDb::seqlevelsStyle(CNA_all_merged_table$cna_chrom) <- "UCSC"
+    }
     CNA_all_merged_table <- CNA_all_merged_table %>% dplyr::distinct()
 
     somatic_SNV_all_merged_table <- data.table::rbindlist(
@@ -85,7 +89,10 @@ process_data_for_HTML_report <- function(data, has_run_tf_binding_site_analysis)
         dplyr::select(sample_ID, gene_name, cis_activated_gene, snv_chrom, snv_pos, ref, alt) %>%
         dplyr::distinct()
 
-    GenomeInfoDb::seqlevelsStyle(somatic_SNV_all_merged_table$snv_chrom) <- "UCSC"
+    if(nrow(somatic_SNV_all_merged_table) > 0){
+        GenomeInfoDb::seqlevelsStyle(somatic_SNV_all_merged_table$snv_chrom) <- "UCSC"
+    }
+
     somatic_SNV_all_merged_table <- somatic_SNV_all_merged_table %>% dplyr::distinct()
 
     if (has_run_tf_binding_site_analysis) {
@@ -271,9 +278,9 @@ process_data_for_HTML_report <- function(data, has_run_tf_binding_site_analysis)
     # cis activation counts by gene/sample -----------------------------------
     # by sample
     cis_activated_genes_by_sample <- cis_activation_summary_table_mut_info %>%
-        dplyr::filter(cis_activated_gene == TRUE) %>%
+        # dplyr::filter(cis_activated_gene == TRUE) %>%
         dplyr::group_by(sample_ID) %>%
-        dplyr::summarize(n_cis_activated_genes = dplyr::n())
+        dplyr::summarize(n_cis_activated_genes = sum(cis_activated_gene, na.rm = T))
 
     cis_activated_genes_by_gene <- cis_activation_summary_table_mut_info %>%
         dplyr::group_by(gene_name, start, end, chrom, gene_type) %>%

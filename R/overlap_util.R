@@ -39,7 +39,9 @@ merge_data_tables_by_overlap <- function(
         GenomeInfoDb::seqlevelsStyle(dt2_GRange) <- "UCSC"
 
         # find overlaps between gene variant overlap window and CNAs
-        overlaps <- GenomicRanges::findOverlaps(query = dt1_GRange, subject = dt2_GRange)
+        suppress_certain_warning({
+            overlaps <- GenomicRanges::findOverlaps(query = dt1_GRange, subject = dt2_GRange)
+        }, "combined objects have no sequence levels in common")
 
         #create merged table
         combinations <- cbind(
@@ -106,8 +108,12 @@ merge_data_tables_by_overlap_dt1_has_two_Ranges <- function(
 
 
     # find overlaps between gene varinant overlap window and CNAs
-    overlaps1 <- GenomicRanges::findOverlaps(query = dt1_GRange1, subject = dt2_GRange)
-    overlaps2 <- GenomicRanges::findOverlaps(query = dt1_GRange2, subject = dt2_GRange)
+    suppress_certain_warning({
+        overlaps1 <- GenomicRanges::findOverlaps(query = dt1_GRange1, subject = dt2_GRange)
+    }, "combined objects have no sequence levels in common")
+    suppress_certain_warning({
+        overlaps2 <- GenomicRanges::findOverlaps(query = dt1_GRange2, subject = dt2_GRange)
+    }, "combined objects have no sequence levels in common")
 
     overlaps1_df <- data.frame(query = S4Vectors::queryHits(overlaps1), subject = S4Vectors::subjectHits(overlaps1))
     overlaps2_df <- data.frame(query = S4Vectors::queryHits(overlaps2), subject = S4Vectors::subjectHits(overlaps2))

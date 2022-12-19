@@ -8,7 +8,8 @@ run_step4_per_cohort(
   paths_file_path,
   output_dir,
   TAD_file_path,
-  run_tf_binding_site_analysis = TRUE
+  run_tf_binding_site_analysis = TRUE,
+  verbose = FALSE
 )
 }
 \arguments{
@@ -19,6 +20,8 @@ run_step4_per_cohort(
 \item{TAD_file_path}{Path to the TAD file. The TAD file contains genomic coordinates of Topologically Associated Domains (TADs). See the documentation for the exact format of this file.}
 
 \item{run_tf_binding_site_analysis}{Should TF binding site analysis be conducted?}
+
+\item{verbose}{should verbose logging be activated? (TRUE / FALSE)}
 }
 \description{
 Run Step 4 of the Revana workflow on a cohort/subgroup of tumor sample data - Parallelized implementation

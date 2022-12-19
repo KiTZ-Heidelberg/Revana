@@ -6,6 +6,7 @@
 #' @param TAD_file_path Path to the TAD file. The TAD file contains genomic coordinates of Topologically Associated Domains (TADs). See the documentation for the exact format of this file.
 #' @param genehancer_ref_file_path Path to the reference for GeneHancer. See the documentation for the exact format of this file and how to obtain it.
 #' @param chipseq_file_path Path to the ChIP-Seq file. The ChIP-Seq file contains genomic coordinates of regulatory active regions and can be obtained from experimental data or online less specific online resources. This file is optional, although an empty dummy file has to be used, if no ChIP-Seq data is supplied. See the documentation for the exact format of this file.
+#' @param verbose should verbose logging be activated? (TRUE / FALSE)
 #' @details
 #' Step 3 of the revana workflow ...
 #' * creates the internal OHE reference
@@ -19,7 +20,8 @@ run_step3_per_cohort <- function(paths_file_path,
                                  gene_annotation_ref_file_path,
                                  TAD_file_path,
                                  genehancer_ref_file_path = NULL,
-                                 chipseq_file_path = NULL) {
+                                 chipseq_file_path = NULL,
+                                 verbose = FALSE) {
     # import paths file  --------------------------------------------
     paths <- import_paths_file(paths_file_path, check_file_table_headers = T)
 
@@ -81,6 +83,8 @@ run_step3_per_cohort <- function(paths_file_path,
         sep = "\t"
     )
 
+    log_msg("OHE reference generated", verbose = verbose)
+
 
     # PROCESS GENEHANCER ############################################
     # import required data  ---------------------------------------
@@ -101,6 +105,8 @@ run_step3_per_cohort <- function(paths_file_path,
         file.path(output_dir, paste0("genehancer_ref.txt"))
     )
 
+    log_msg("GeneHancer reference generated", verbose = verbose)
+
     # PROCESS CHIPSEQ ############################################
     # import required data  ---------------------------------------
     chipseq_raw_import <- import_chipseq_file(chipseq_file_path)
@@ -118,6 +124,9 @@ run_step3_per_cohort <- function(paths_file_path,
         chipseq,
         file.path(output_dir, paste0("chipseq.txt"))
     )
+
+    log_msg("ChIP-Seq data processed", verbose = verbose)
+
 
     # LINK CHIPSEQ TO TADs #######################################
     # import required data -----------------------------------
@@ -138,4 +147,6 @@ run_step3_per_cohort <- function(paths_file_path,
         chipseq_by_gene,
         file.path(output_dir, paste0("chipseq_by_gene.txt"))
     )
+
+    log_msg("ChIP-Seq data linked to genes", verbose = verbose)
 }

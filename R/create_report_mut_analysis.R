@@ -1,6 +1,8 @@
 create_mut_analysis_HTML <- function(processed_data, has_run_tf_binding_site_analysis, HTML_report_figure_directory) {
     # CREATE HTML FOR PART III ####################################
 
+    cat("Creating mutation type analysis...\n")
+
     # any_muts
     contingency_table_any_muts <- cont_table(
         processed_data$cis_activation_summary_table_ANY_mut_info$cis_activated_gene,
@@ -10,7 +12,12 @@ create_mut_analysis_HTML <- function(processed_data, has_run_tf_binding_site_ana
     cis_activation_frequency_WITHOUT_any_muts <- contingency_table_any_muts[2, 1] / (contingency_table_any_muts[1, 1] + contingency_table_any_muts[2, 1])
     cis_activation_frequency_WITH_any_muts <- contingency_table_any_muts[2, 2] / (contingency_table_any_muts[1, 2] + contingency_table_any_muts[2, 2])
 
-    chi_square_test_any_muts <- chisq.test(contingency_table_any_muts)
+    # suppress warning: Chi-squared approximation may be incorrect / Chi-Quadrat-Approximation kann inkorrekt sein
+    # users should be aware of this when interpreting the result -> no need for user warning
+    
+    suppress_certain_warning({
+        chi_square_test_any_muts <- chisq.test(contingency_table_any_muts)
+    }, "Chi")
     odds_ratio_any_muts <- (contingency_table_any_muts[2, 2] / contingency_table_any_muts[1, 2]) / (contingency_table_any_muts[2, 1] / contingency_table_any_muts[1, 1])
 
     # any_muts_genehancer
@@ -22,7 +29,12 @@ create_mut_analysis_HTML <- function(processed_data, has_run_tf_binding_site_ana
     cis_activation_frequency_WITHOUT_any_muts_genehancer <- contingency_table_any_muts_genehancer[2, 1] / (contingency_table_any_muts_genehancer[1, 1] + contingency_table_any_muts_genehancer[2, 1])
     cis_activation_frequency_WITH_any_muts_genehancer <- contingency_table_any_muts_genehancer[2, 2] / (contingency_table_any_muts_genehancer[1, 2] + contingency_table_any_muts_genehancer[2, 2])
 
-    chi_square_test_any_muts_genehancer <- chisq.test(contingency_table_any_muts_genehancer)
+    # suppress warning: Chi-squared approximation may be incorrect / Chi-Quadrat-Approximation kann inkorrekt sein
+    # users should be aware of this when interpreting the result -> no need for user warning
+    
+    suppress_certain_warning({
+        chi_square_test_any_muts_genehancer <- chisq.test(contingency_table_any_muts_genehancer)
+    }, "Chi")
     odds_ratio_any_muts_genehancer <- (contingency_table_any_muts_genehancer[2, 2] / contingency_table_any_muts_genehancer[1, 2]) / (contingency_table_any_muts_genehancer[2, 1] / contingency_table_any_muts_genehancer[1, 1])
 
     # any_muts_gene
@@ -34,7 +46,12 @@ create_mut_analysis_HTML <- function(processed_data, has_run_tf_binding_site_ana
     cis_activation_frequency_WITHOUT_any_muts_gene <- contingency_table_any_muts_gene[2, 1] / (contingency_table_any_muts_gene[1, 1] + contingency_table_any_muts_gene[2, 1])
     cis_activation_frequency_WITH_any_muts_gene <- contingency_table_any_muts_gene[2, 2] / (contingency_table_any_muts_gene[1, 2] + contingency_table_any_muts_gene[2, 2])
 
-    chi_square_test_any_muts_gene <- chisq.test(contingency_table_any_muts_gene)
+    # suppress warning: Chi-squared approximation may be incorrect / Chi-Quadrat-Approximation kann inkorrekt sein
+    # users should be aware of this when interpreting the result -> no need for user warning
+    
+    suppress_certain_warning({
+        chi_square_test_any_muts_gene <- chisq.test(contingency_table_any_muts_gene)
+    }, "Chi")
     odds_ratio_any_muts_gene <- (contingency_table_any_muts_gene[2, 2] / contingency_table_any_muts_gene[1, 2]) / (contingency_table_any_muts_gene[2, 1] / contingency_table_any_muts_gene[1, 1])
 
 
@@ -47,7 +64,12 @@ create_mut_analysis_HTML <- function(processed_data, has_run_tf_binding_site_ana
     cis_activation_frequency_WITHOUT_any_muts_chipseq <- contingency_table_any_muts_chipseq[2, 1] / (contingency_table_any_muts_chipseq[1, 1] + contingency_table_any_muts_chipseq[2, 1])
     cis_activation_frequency_WITH_any_muts_chipseq <- contingency_table_any_muts_chipseq[2, 2] / (contingency_table_any_muts_chipseq[1, 2] + contingency_table_any_muts_chipseq[2, 2])
 
-    chi_square_test_any_muts_chipseq <- chisq.test(contingency_table_any_muts_chipseq)
+    # suppress warning: Chi-squared approximation may be incorrect / Chi-Quadrat-Approximation kann inkorrekt sein
+    # users should be aware of this when interpreting the result -> no need for user warning
+    
+    suppress_certain_warning({
+        chi_square_test_any_muts_chipseq <- chisq.test(contingency_table_any_muts_chipseq)
+    }, "Chi")
     odds_ratio_any_muts_chipseq <- (contingency_table_any_muts_chipseq[2, 2] / contingency_table_any_muts_chipseq[1, 2]) / (contingency_table_any_muts_chipseq[2, 1] / contingency_table_any_muts_chipseq[1, 1])
 
     # any_CNAs
@@ -59,7 +81,12 @@ create_mut_analysis_HTML <- function(processed_data, has_run_tf_binding_site_ana
     cis_activation_frequency_WITHOUT_any_CNAs <- contingency_table_any_CNAs[2, 1] / (contingency_table_any_CNAs[1, 1] + contingency_table_any_CNAs[2, 1])
     cis_activation_frequency_WITH_any_CNAs <- contingency_table_any_CNAs[2, 2] / (contingency_table_any_CNAs[1, 2] + contingency_table_any_CNAs[2, 2])
 
-    chi_square_test_any_CNAs <- chisq.test(contingency_table_any_CNAs)
+    # suppress warning: Chi-squared approximation may be incorrect / Chi-Quadrat-Approximation kann inkorrekt sein
+    # users should be aware of this when interpreting the result -> no need for user warning
+    
+    suppress_certain_warning({
+        chi_square_test_any_CNAs <- chisq.test(contingency_table_any_CNAs)
+    }, "Chi")
     odds_ratio_any_CNAs <- (contingency_table_any_CNAs[2, 2] / contingency_table_any_CNAs[1, 2]) / (contingency_table_any_CNAs[2, 1] / contingency_table_any_CNAs[1, 1])
 
     # any_CNAs_genehancer
@@ -71,7 +98,12 @@ create_mut_analysis_HTML <- function(processed_data, has_run_tf_binding_site_ana
     cis_activation_frequency_WITHOUT_any_CNAs_genehancer <- contingency_table_any_CNAs_genehancer[2, 1] / (contingency_table_any_CNAs_genehancer[1, 1] + contingency_table_any_CNAs_genehancer[2, 1])
     cis_activation_frequency_WITH_any_CNAs_genehancer <- contingency_table_any_CNAs_genehancer[2, 2] / (contingency_table_any_CNAs_genehancer[1, 2] + contingency_table_any_CNAs_genehancer[2, 2])
 
-    chi_square_test_any_CNAs_genehancer <- chisq.test(contingency_table_any_CNAs_genehancer)
+    # suppress warning: Chi-squared approximation may be incorrect / Chi-Quadrat-Approximation kann inkorrekt sein
+    # users should be aware of this when interpreting the result -> no need for user warning
+    
+    suppress_certain_warning({
+        chi_square_test_any_CNAs_genehancer <- chisq.test(contingency_table_any_CNAs_genehancer)
+    }, "Chi")
     odds_ratio_any_CNAs_genehancer <- (contingency_table_any_CNAs_genehancer[2, 2] / contingency_table_any_CNAs_genehancer[1, 2]) / (contingency_table_any_CNAs_genehancer[2, 1] / contingency_table_any_CNAs_genehancer[1, 1])
 
     # any_CNAs_gene
@@ -83,7 +115,12 @@ create_mut_analysis_HTML <- function(processed_data, has_run_tf_binding_site_ana
     cis_activation_frequency_WITHOUT_any_CNAs_gene <- contingency_table_any_CNAs_gene[2, 1] / (contingency_table_any_CNAs_gene[1, 1] + contingency_table_any_CNAs_gene[2, 1])
     cis_activation_frequency_WITH_any_CNAs_gene <- contingency_table_any_CNAs_gene[2, 2] / (contingency_table_any_CNAs_gene[1, 2] + contingency_table_any_CNAs_gene[2, 2])
 
-    chi_square_test_any_CNAs_gene <- chisq.test(contingency_table_any_CNAs_gene)
+    # suppress warning: Chi-squared approximation may be incorrect / Chi-Quadrat-Approximation kann inkorrekt sein
+    # users should be aware of this when interpreting the result -> no need for user warning
+    
+    suppress_certain_warning({
+        chi_square_test_any_CNAs_gene <- chisq.test(contingency_table_any_CNAs_gene)
+    }, "Chi")
     odds_ratio_any_CNAs_gene <- (contingency_table_any_CNAs_gene[2, 2] / contingency_table_any_CNAs_gene[1, 2]) / (contingency_table_any_CNAs_gene[2, 1] / contingency_table_any_CNAs_gene[1, 1])
 
     # any_CNAs_chipseq
@@ -95,7 +132,12 @@ create_mut_analysis_HTML <- function(processed_data, has_run_tf_binding_site_ana
     cis_activation_frequency_WITHOUT_any_CNAs_chipseq <- contingency_table_any_CNAs_chipseq[2, 1] / (contingency_table_any_CNAs_chipseq[1, 1] + contingency_table_any_CNAs_chipseq[2, 1])
     cis_activation_frequency_WITH_any_CNAs_chipseq <- contingency_table_any_CNAs_chipseq[2, 2] / (contingency_table_any_CNAs_chipseq[1, 2] + contingency_table_any_CNAs_chipseq[2, 2])
 
-    chi_square_test_any_CNAs_chipseq <- chisq.test(contingency_table_any_CNAs_chipseq)
+    # suppress warning: Chi-squared approximation may be incorrect / Chi-Quadrat-Approximation kann inkorrekt sein
+    # users should be aware of this when interpreting the result -> no need for user warning
+    
+    suppress_certain_warning({
+        chi_square_test_any_CNAs_chipseq <- chisq.test(contingency_table_any_CNAs_chipseq)
+    }, "Chi")
     odds_ratio_any_CNAs_chipseq <- (contingency_table_any_CNAs_chipseq[2, 2] / contingency_table_any_CNAs_chipseq[1, 2]) / (contingency_table_any_CNAs_chipseq[2, 1] / contingency_table_any_CNAs_chipseq[1, 1])
 
     # any_SVs
@@ -107,7 +149,12 @@ create_mut_analysis_HTML <- function(processed_data, has_run_tf_binding_site_ana
     cis_activation_frequency_WITHOUT_any_SVs <- contingency_table_any_SVs[2, 1] / (contingency_table_any_SVs[1, 1] + contingency_table_any_SVs[2, 1])
     cis_activation_frequency_WITH_any_SVs <- contingency_table_any_SVs[2, 2] / (contingency_table_any_SVs[1, 2] + contingency_table_any_SVs[2, 2])
 
-    chi_square_test_any_SVs <- chisq.test(contingency_table_any_SVs)
+    # suppress warning: Chi-squared approximation may be incorrect / Chi-Quadrat-Approximation kann inkorrekt sein
+    # users should be aware of this when interpreting the result -> no need for user warning
+    
+    suppress_certain_warning({
+        chi_square_test_any_SVs <- chisq.test(contingency_table_any_SVs)
+    }, "Chi")
     odds_ratio_any_SVs <- (contingency_table_any_SVs[2, 2] / contingency_table_any_SVs[1, 2]) / (contingency_table_any_SVs[2, 1] / contingency_table_any_SVs[1, 1])
 
     # any_SVs_genehancer
@@ -119,7 +166,12 @@ create_mut_analysis_HTML <- function(processed_data, has_run_tf_binding_site_ana
     cis_activation_frequency_WITHOUT_any_SVs_genehancer <- contingency_table_any_SVs_genehancer[2, 1] / (contingency_table_any_SVs_genehancer[1, 1] + contingency_table_any_SVs_genehancer[2, 1])
     cis_activation_frequency_WITH_any_SVs_genehancer <- contingency_table_any_SVs_genehancer[2, 2] / (contingency_table_any_SVs_genehancer[1, 2] + contingency_table_any_SVs_genehancer[2, 2])
 
-    chi_square_test_any_SVs_genehancer <- chisq.test(contingency_table_any_SVs_genehancer)
+    # suppress warning: Chi-squared approximation may be incorrect / Chi-Quadrat-Approximation kann inkorrekt sein
+    # users should be aware of this when interpreting the result -> no need for user warning
+    
+    suppress_certain_warning({
+        chi_square_test_any_SVs_genehancer <- chisq.test(contingency_table_any_SVs_genehancer)
+    }, "Chi")
     odds_ratio_any_SVs_genehancer <- (contingency_table_any_SVs_genehancer[2, 2] / contingency_table_any_SVs_genehancer[1, 2]) / (contingency_table_any_SVs_genehancer[2, 1] / contingency_table_any_SVs_genehancer[1, 1])
 
     # any_SVs_gene
@@ -131,7 +183,12 @@ create_mut_analysis_HTML <- function(processed_data, has_run_tf_binding_site_ana
     cis_activation_frequency_WITHOUT_any_SVs_gene <- contingency_table_any_SVs_gene[2, 1] / (contingency_table_any_SVs_gene[1, 1] + contingency_table_any_SVs_gene[2, 1])
     cis_activation_frequency_WITH_any_SVs_gene <- contingency_table_any_SVs_gene[2, 2] / (contingency_table_any_SVs_gene[1, 2] + contingency_table_any_SVs_gene[2, 2])
 
-    chi_square_test_any_SVs_gene <- chisq.test(contingency_table_any_SVs_gene)
+    # suppress warning: Chi-squared approximation may be incorrect / Chi-Quadrat-Approximation kann inkorrekt sein
+    # users should be aware of this when interpreting the result -> no need for user warning
+    
+    suppress_certain_warning({
+        chi_square_test_any_SVs_gene <- chisq.test(contingency_table_any_SVs_gene)
+    }, "Chi")
     odds_ratio_any_SVs_gene <- (contingency_table_any_SVs_gene[2, 2] / contingency_table_any_SVs_gene[1, 2]) / (contingency_table_any_SVs_gene[2, 1] / contingency_table_any_SVs_gene[1, 1])
 
     # any_SVs_chipseq
@@ -143,7 +200,12 @@ create_mut_analysis_HTML <- function(processed_data, has_run_tf_binding_site_ana
     cis_activation_frequency_WITHOUT_any_SVs_chipseq <- contingency_table_any_SVs_chipseq[2, 1] / (contingency_table_any_SVs_chipseq[1, 1] + contingency_table_any_SVs_chipseq[2, 1])
     cis_activation_frequency_WITH_any_SVs_chipseq <- contingency_table_any_SVs_chipseq[2, 2] / (contingency_table_any_SVs_chipseq[1, 2] + contingency_table_any_SVs_chipseq[2, 2])
 
-    chi_square_test_any_SVs_chipseq <- chisq.test(contingency_table_any_SVs_chipseq)
+    # suppress warning: Chi-squared approximation may be incorrect / Chi-Quadrat-Approximation kann inkorrekt sein
+    # users should be aware of this when interpreting the result -> no need for user warning
+    
+    suppress_certain_warning({
+        chi_square_test_any_SVs_chipseq <- chisq.test(contingency_table_any_SVs_chipseq)
+    }, "Chi")
     odds_ratio_any_SVs_chipseq <- (contingency_table_any_SVs_chipseq[2, 2] / contingency_table_any_SVs_chipseq[1, 2]) / (contingency_table_any_SVs_chipseq[2, 1] / contingency_table_any_SVs_chipseq[1, 1])
 
 
@@ -156,7 +218,12 @@ create_mut_analysis_HTML <- function(processed_data, has_run_tf_binding_site_ana
     cis_activation_frequency_WITHOUT_any_somatic_SNVs <- contingency_table_any_somatic_SNVs[2, 1] / (contingency_table_any_somatic_SNVs[1, 1] + contingency_table_any_somatic_SNVs[2, 1])
     cis_activation_frequency_WITH_any_somatic_SNVs <- contingency_table_any_somatic_SNVs[2, 2] / (contingency_table_any_somatic_SNVs[1, 2] + contingency_table_any_somatic_SNVs[2, 2])
 
-    chi_square_test_any_somatic_SNVs <- chisq.test(contingency_table_any_somatic_SNVs)
+    # suppress warning: Chi-squared approximation may be incorrect / Chi-Quadrat-Approximation kann inkorrekt sein
+    # users should be aware of this when interpreting the result -> no need for user warning
+    
+    suppress_certain_warning({
+        chi_square_test_any_somatic_SNVs <- chisq.test(contingency_table_any_somatic_SNVs)
+    }, "Chi")
     odds_ratio_any_somatic_SNVs <- (contingency_table_any_somatic_SNVs[2, 2] / contingency_table_any_somatic_SNVs[1, 2]) / (contingency_table_any_somatic_SNVs[2, 1] / contingency_table_any_somatic_SNVs[1, 1])
 
     # any_somatic_SNVs_genehancer
@@ -168,7 +235,12 @@ create_mut_analysis_HTML <- function(processed_data, has_run_tf_binding_site_ana
     cis_activation_frequency_WITHOUT_any_somatic_SNVs_genehancer <- contingency_table_any_somatic_SNVs_genehancer[2, 1] / (contingency_table_any_somatic_SNVs_genehancer[1, 1] + contingency_table_any_somatic_SNVs_genehancer[2, 1])
     cis_activation_frequency_WITH_any_somatic_SNVs_genehancer <- contingency_table_any_somatic_SNVs_genehancer[2, 2] / (contingency_table_any_somatic_SNVs_genehancer[1, 2] + contingency_table_any_somatic_SNVs_genehancer[2, 2])
 
-    chi_square_test_any_somatic_SNVs_genehancer <- chisq.test(contingency_table_any_somatic_SNVs_genehancer)
+    # suppress warning: Chi-squared approximation may be incorrect / Chi-Quadrat-Approximation kann inkorrekt sein
+    # users should be aware of this when interpreting the result -> no need for user warning
+    
+    suppress_certain_warning({
+        chi_square_test_any_somatic_SNVs_genehancer <- chisq.test(contingency_table_any_somatic_SNVs_genehancer)
+    }, "Chi")
     odds_ratio_any_somatic_SNVs_genehancer <- (contingency_table_any_somatic_SNVs_genehancer[2, 2] / contingency_table_any_somatic_SNVs_genehancer[1, 2]) / (contingency_table_any_somatic_SNVs_genehancer[2, 1] / contingency_table_any_somatic_SNVs_genehancer[1, 1])
 
     # any_somatic_SNVs_gene
@@ -180,7 +252,12 @@ create_mut_analysis_HTML <- function(processed_data, has_run_tf_binding_site_ana
     cis_activation_frequency_WITHOUT_any_somatic_SNVs_gene <- contingency_table_any_somatic_SNVs_gene[2, 1] / (contingency_table_any_somatic_SNVs_gene[1, 1] + contingency_table_any_somatic_SNVs_gene[2, 1])
     cis_activation_frequency_WITH_any_somatic_SNVs_gene <- contingency_table_any_somatic_SNVs_gene[2, 2] / (contingency_table_any_somatic_SNVs_gene[1, 2] + contingency_table_any_somatic_SNVs_gene[2, 2])
 
-    chi_square_test_any_somatic_SNVs_gene <- chisq.test(contingency_table_any_somatic_SNVs_gene)
+    # suppress warning: Chi-squared approximation may be incorrect / Chi-Quadrat-Approximation kann inkorrekt sein
+    # users should be aware of this when interpreting the result -> no need for user warning
+    
+    suppress_certain_warning({
+        chi_square_test_any_somatic_SNVs_gene <- chisq.test(contingency_table_any_somatic_SNVs_gene)
+    }, "Chi")
     odds_ratio_any_somatic_SNVs_gene <- (contingency_table_any_somatic_SNVs_gene[2, 2] / contingency_table_any_somatic_SNVs_gene[1, 2]) / (contingency_table_any_somatic_SNVs_gene[2, 1] / contingency_table_any_somatic_SNVs_gene[1, 1])
 
     # any_somatic_SNVs_chipseq
@@ -192,7 +269,12 @@ create_mut_analysis_HTML <- function(processed_data, has_run_tf_binding_site_ana
     cis_activation_frequency_WITHOUT_any_somatic_SNVs_chipseq <- contingency_table_any_somatic_SNVs_chipseq[2, 1] / (contingency_table_any_somatic_SNVs_chipseq[1, 1] + contingency_table_any_somatic_SNVs_chipseq[2, 1])
     cis_activation_frequency_WITH_any_somatic_SNVs_chipseq <- contingency_table_any_somatic_SNVs_chipseq[2, 2] / (contingency_table_any_somatic_SNVs_chipseq[1, 2] + contingency_table_any_somatic_SNVs_chipseq[2, 2])
 
-    chi_square_test_any_somatic_SNVs_chipseq <- chisq.test(contingency_table_any_somatic_SNVs_chipseq)
+    # suppress warning: Chi-squared approximation may be incorrect / Chi-Quadrat-Approximation kann inkorrekt sein
+    # users should be aware of this when interpreting the result -> no need for user warning
+    
+    suppress_certain_warning({
+        chi_square_test_any_somatic_SNVs_chipseq <- chisq.test(contingency_table_any_somatic_SNVs_chipseq)
+    }, "Chi")
     odds_ratio_any_somatic_SNVs_chipseq <- (contingency_table_any_somatic_SNVs_chipseq[2, 2] / contingency_table_any_somatic_SNVs_chipseq[1, 2]) / (contingency_table_any_somatic_SNVs_chipseq[2, 1] / contingency_table_any_somatic_SNVs_chipseq[1, 1])
 
 
@@ -209,7 +291,12 @@ create_mut_analysis_HTML <- function(processed_data, has_run_tf_binding_site_ana
         cis_activation_frequency_WITHOUT_any_relevant_somatic_SNVs <- contingency_table_any_relevant_somatic_SNVs[2, 1] / (contingency_table_any_relevant_somatic_SNVs[1, 1] + contingency_table_any_relevant_somatic_SNVs[2, 1])
         cis_activation_frequency_WITH_any_relevant_somatic_SNVs <- contingency_table_any_relevant_somatic_SNVs[2, 2] / (contingency_table_any_relevant_somatic_SNVs[1, 2] + contingency_table_any_relevant_somatic_SNVs[2, 2])
 
-        chi_square_test_any_relevant_somatic_SNVs <- chisq.test(contingency_table_any_relevant_somatic_SNVs)
+    # suppress warning: Chi-squared approximation may be incorrect / Chi-Quadrat-Approximation kann inkorrekt sein
+    # users should be aware of this when interpreting the result -> no need for user warning
+    
+        suppress_certain_warning({
+            chi_square_test_any_relevant_somatic_SNVs <- chisq.test(contingency_table_any_relevant_somatic_SNVs)
+    }, "Chi")    
         odds_ratio_any_relevant_somatic_SNVs <- (contingency_table_any_relevant_somatic_SNVs[2, 2] / contingency_table_any_relevant_somatic_SNVs[1, 2]) / (contingency_table_any_relevant_somatic_SNVs[2, 1] / contingency_table_any_relevant_somatic_SNVs[1, 1])
 
         # any_relevant_somatic_SNVs_genehancer
@@ -221,7 +308,12 @@ create_mut_analysis_HTML <- function(processed_data, has_run_tf_binding_site_ana
         cis_activation_frequency_WITHOUT_any_relevant_somatic_SNVs_genehancer <- contingency_table_any_relevant_somatic_SNVs_genehancer[2, 1] / (contingency_table_any_relevant_somatic_SNVs_genehancer[1, 1] + contingency_table_any_relevant_somatic_SNVs_genehancer[2, 1])
         cis_activation_frequency_WITH_any_relevant_somatic_SNVs_genehancer <- contingency_table_any_relevant_somatic_SNVs_genehancer[2, 2] / (contingency_table_any_relevant_somatic_SNVs_genehancer[1, 2] + contingency_table_any_relevant_somatic_SNVs_genehancer[2, 2])
 
-        chi_square_test_any_relevant_somatic_SNVs_genehancer <- chisq.test(contingency_table_any_relevant_somatic_SNVs_genehancer)
+    # suppress warning: Chi-squared approximation may be incorrect / Chi-Quadrat-Approximation kann inkorrekt sein
+    # users should be aware of this when interpreting the result -> no need for user warning
+    
+        suppress_certain_warning({
+            chi_square_test_any_relevant_somatic_SNVs_genehancer <- chisq.test(contingency_table_any_relevant_somatic_SNVs_genehancer)
+    }, "Chi")    
         odds_ratio_any_relevant_somatic_SNVs_genehancer <- (contingency_table_any_relevant_somatic_SNVs_genehancer[2, 2] / contingency_table_any_relevant_somatic_SNVs_genehancer[1, 2]) / (contingency_table_any_relevant_somatic_SNVs_genehancer[2, 1] / contingency_table_any_relevant_somatic_SNVs_genehancer[1, 1])
 
         # any_relevant_somatic_SNVs_gene
@@ -233,7 +325,12 @@ create_mut_analysis_HTML <- function(processed_data, has_run_tf_binding_site_ana
         cis_activation_frequency_WITHOUT_any_relevant_somatic_SNVs_gene <- contingency_table_any_relevant_somatic_SNVs_gene[2, 1] / (contingency_table_any_relevant_somatic_SNVs_gene[1, 1] + contingency_table_any_relevant_somatic_SNVs_gene[2, 1])
         cis_activation_frequency_WITH_any_relevant_somatic_SNVs_gene <- contingency_table_any_relevant_somatic_SNVs_gene[2, 2] / (contingency_table_any_relevant_somatic_SNVs_gene[1, 2] + contingency_table_any_relevant_somatic_SNVs_gene[2, 2])
 
-        chi_square_test_any_relevant_somatic_SNVs_gene <- chisq.test(contingency_table_any_relevant_somatic_SNVs_gene)
+    # suppress warning: Chi-squared approximation may be incorrect / Chi-Quadrat-Approximation kann inkorrekt sein
+    # users should be aware of this when interpreting the result -> no need for user warning
+    
+        suppress_certain_warning({
+            chi_square_test_any_relevant_somatic_SNVs_gene <- chisq.test(contingency_table_any_relevant_somatic_SNVs_gene)
+    }, "Chi")    
         odds_ratio_any_relevant_somatic_SNVs_gene <- (contingency_table_any_relevant_somatic_SNVs_gene[2, 2] / contingency_table_any_relevant_somatic_SNVs_gene[1, 2]) / (contingency_table_any_relevant_somatic_SNVs_gene[2, 1] / contingency_table_any_relevant_somatic_SNVs_gene[1, 1])
 
         # any_relevant_somatic_SNVs_chipseq ###CHECK gene TAD?
@@ -245,7 +342,12 @@ create_mut_analysis_HTML <- function(processed_data, has_run_tf_binding_site_ana
         cis_activation_frequency_WITHOUT_any_relevant_somatic_SNVs_chipseq <- contingency_table_any_relevant_somatic_SNVs_chipseq[2, 1] / (contingency_table_any_relevant_somatic_SNVs_chipseq[1, 1] + contingency_table_any_relevant_somatic_SNVs_chipseq[2, 1])
         cis_activation_frequency_WITH_any_relevant_somatic_SNVs_chipseq <- contingency_table_any_relevant_somatic_SNVs_chipseq[2, 2] / (contingency_table_any_relevant_somatic_SNVs_chipseq[1, 2] + contingency_table_any_relevant_somatic_SNVs_chipseq[2, 2])
 
-        chi_square_test_any_relevant_somatic_SNVs_chipseq <- chisq.test(contingency_table_any_relevant_somatic_SNVs_chipseq)
+    # suppress warning: Chi-squared approximation may be incorrect / Chi-Quadrat-Approximation kann inkorrekt sein
+    # users should be aware of this when interpreting the result -> no need for user warning
+    
+        suppress_certain_warning({
+            chi_square_test_any_relevant_somatic_SNVs_chipseq <- chisq.test(contingency_table_any_relevant_somatic_SNVs_chipseq)
+    }, "Chi")    
         odds_ratio_any_relevant_somatic_SNVs_chipseq <- (contingency_table_any_relevant_somatic_SNVs_chipseq[2, 2] / contingency_table_any_relevant_somatic_SNVs_chipseq[1, 2]) / (contingency_table_any_relevant_somatic_SNVs_chipseq[2, 1] / contingency_table_any_relevant_somatic_SNVs_chipseq[1, 1])
 
 
@@ -300,7 +402,7 @@ create_mut_analysis_HTML <- function(processed_data, has_run_tf_binding_site_ana
 
 
     # SV subcategories - genehancer
-    cat("create SV subcategory - genehancer table...\n")
+    # cat("create SV subcategory - genehancer table...\n")
     SV_genehancer_position_category_summary_cis_activated <- processed_data$SV_genehancer_all_table %>%
         dplyr::mutate(cis_activated_gene = (cis_activated_gene & (!is.na(cis_activated_gene)))) %>%
         dplyr::filter(cis_activated_gene == TRUE) %>%
@@ -324,10 +426,10 @@ create_mut_analysis_HTML <- function(processed_data, has_run_tf_binding_site_ana
 
     SV_genehancer_position_category_summary_HTML_sorted_freq <- knitr::kable(SV_genehancer_position_category_summary_sorted_freq, format = "html", table.attr = "class=\"table sv-pos-table table-striped table-bordered\"")
     SV_genehancer_position_category_summary_HTML_sorted_n <- knitr::kable(SV_genehancer_position_category_summary_sorted_n, format = "html", table.attr = "class=\"table sv-pos-table table-striped table-bordered\"")
-    cat("created SV subcategory - genehancer table!\n")
+    # cat("created SV subcategory - genehancer table!\n")
 
     # SV subcategories - chipseq
-    cat("create SV subcategory - chipseq table...\n")
+    # cat("create SV subcategory - chipseq table...\n")
     SV_chipseq_position_category_summary_cis_activated <- processed_data$SV_chipseq_all_table %>%
         dplyr::mutate(cis_activated_gene = (cis_activated_gene & (!is.na(cis_activated_gene)))) %>%
         dplyr::filter(cis_activated_gene == TRUE) %>%
@@ -351,10 +453,10 @@ create_mut_analysis_HTML <- function(processed_data, has_run_tf_binding_site_ana
 
     SV_chipseq_position_category_summary_HTML_sorted_freq <- knitr::kable(SV_chipseq_position_category_summary_sorted_freq, format = "html", table.attr = "class=\"table sv-pos-table table-striped table-bordered\"")
     SV_chipseq_position_category_summary_HTML_sorted_n <- knitr::kable(SV_chipseq_position_category_summary_sorted_n, format = "html", table.attr = "class=\"table sv-pos-table table-striped table-bordered\"")
-    cat("created SV subcategory - chipseq table!\n")
+    # cat("created SV subcategory - chipseq table!\n")
 
     # CNA subcategories - genehancer
-    cat("create CNA subcategory - genehancer table...\n")
+    # cat("create CNA subcategory - genehancer table...\n")
     CNA_genehancer_position_category_summary_cis_activated <- processed_data$CNA_genehancer_all_table %>%
         dplyr::mutate(cis_activated_gene = (cis_activated_gene & (!is.na(cis_activated_gene)))) %>%
         dplyr::filter(cis_activated_gene == TRUE) %>%
@@ -378,10 +480,10 @@ create_mut_analysis_HTML <- function(processed_data, has_run_tf_binding_site_ana
 
     CNA_genehancer_position_category_summary_HTML_sorted_freq <- knitr::kable(CNA_genehancer_position_category_summary_sorted_freq, format = "html", table.attr = "class=\"table cna-pos-table table-striped table-bordered\"")
     CNA_genehancer_position_category_summary_HTML_sorted_n <- knitr::kable(CNA_genehancer_position_category_summary_sorted_n, format = "html", table.attr = "class=\"table cna-pos-table table-striped table-bordered\"")
-    cat("created CNA subcategory - genehancer table!\n")
+    # cat("created CNA subcategory - genehancer table!\n")
 
     # CNA subcategories - chipseq
-    cat("create CNA subcategory - chipseq table...\n")
+    # cat("create CNA subcategory - chipseq table...\n")
     CNA_chipseq_position_category_summary_cis_activated <- processed_data$CNA_chipseq_all_table %>%
         dplyr::mutate(cis_activated_gene = (cis_activated_gene & (!is.na(cis_activated_gene)))) %>%
         dplyr::filter(cis_activated_gene == TRUE) %>%
@@ -405,7 +507,7 @@ create_mut_analysis_HTML <- function(processed_data, has_run_tf_binding_site_ana
 
     CNA_chipseq_position_category_summary_HTML_sorted_freq <- knitr::kable(CNA_chipseq_position_category_summary_sorted_freq, format = "html", table.attr = "class=\"table cna-pos-table table-striped table-bordered\"")
     CNA_chipseq_position_category_summary_HTML_sorted_n <- knitr::kable(CNA_chipseq_position_category_summary_sorted_n, format = "html", table.attr = "class=\"table cna-pos-table table-striped table-bordered\"")
-    cat("created CNA subcategory - chipseq table!\n")
+    # cat("created CNA subcategory - chipseq table!\n")
 
 
     # util function

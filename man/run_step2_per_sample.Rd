@@ -13,7 +13,8 @@ run_step2_per_sample(
   fimo_motif_ref_path = NULL,
   motif_id_tf_gene_name_table_path = NULL,
   run_tf_binding_site_analysis = TRUE,
-  reference_genome = NULL
+  reference_genome = NULL,
+  verbose = FALSE
 )
 }
 \arguments{
@@ -34,6 +35,8 @@ run_step2_per_sample(
 \item{run_tf_binding_site_analysis}{Should TF binding site analysis be conducted?}
 
 \item{reference_genome}{Which genome should be used. Default (NULL) uses Human Genome build GRCh37 (hg19)}
+
+\item{verbose}{should verbose logging be activated? (TRUE / FALSE)}
 }
 \description{
 Run Step 2 of the Revana workflow on a cohort/subgroup of tumor sample data - Parallelized implementation

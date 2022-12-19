@@ -3,13 +3,13 @@
 #' @param copy_numbers tibble of somatic copy number data
 #' @param sample_id ID of the sample. Only used for adequate error messages
 #' @importFrom magrittr %>%
-process_copy_numbers <- function(copy_numbers, sample_id) {
+process_copy_numbers <- function(copy_numbers, sample_id, verbose = FALSE) {
     if(nrow(copy_numbers)> 1){
         # remove overlapping ends
         LEN <- length(copy_numbers$start)
         overlapping_ends <- (copy_numbers$end >= c(copy_numbers$start[2:LEN], Inf)) &
             (copy_numbers$chrom == c(copy_numbers$chrom[2:LEN], ""))
-        cat(paste0("Removed ", sum(overlapping_ends), " overlapping ends\n"))
+        log_msg(paste0("processing copy number data - removed ", sum(overlapping_ends), " overlapping ends"), verbose = verbose, sample_id = sample_id, log_time = FALSE)
         # cut one base from end overlapping
         copy_numbers$end[which(overlapping_ends)] <- copy_numbers$end[which(overlapping_ends)] - 1
 

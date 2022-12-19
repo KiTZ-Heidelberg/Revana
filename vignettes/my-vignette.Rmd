@@ -34,10 +34,12 @@ This document provides documentation for the _Revana_ R package.
 # 1 - Installation
 Revana can be installed from the R console with the following command:
 ```{r, eval=F, echo=T}
-if (!requireNamespace("devtools", quietly = TRUE))
-    install.packages("devtools")
-devtools::install_github("https://github.com/KiTZ-Heidelberg/revana")
+if (!requireNamespace("remotes", quietly = TRUE))
+  install.packages("remotes")
+remotes::install_github("https://github.com/KiTZ-Heidelberg/revana")
 ```
+
+For more details about the installation or any trouble shooting see the installation walkthrough [here](https://github.com/KiTZ-Heidelberg/revana-demo-data)
 
 # 2 - Input Formats
 The following files are used as input for Revana. Some files are required once per included sample and others only once per cohort.
@@ -226,7 +228,7 @@ This file provides Revana with the GeneHancer dataset. It can be obtained via do
 
 \* These columns are annotative only. Thus, no calculations are based on their values.
 
-If you want to run Revana without GeneHancer functionality, set the _genehancer\_ref\_file\_path_ argument in the run function argument to _NULL_.
+If you want to run Revana without GeneHancer functionality, set the _genehancer\_ref\_file\_path_ argument in the _run\_analysis_ function argument to _NULL_.
 
 # 3 - Create Required Reference/Input Data with Revana
 ## Marker File
@@ -342,7 +344,7 @@ library(revana)
 Then run Revana with the following command:
 
 ```{r, eval=F, echo=T}
-run(
+run_analysis(
   # path to the paths file
   paths_file_path = paths_file_path,
   # output directory to store results
@@ -368,7 +370,11 @@ run(
   # whether TF binding site analysis is supposed to be run
   run_tf_binding_site_analysis = FALSE,
   # reference genome – provide NULL for hg 19
-  reference_genome = NULL
+  reference_genome = NULL,
+  # should verbose logging be activated?
+  verbose = FALSE,
+  # should parallelization (multi-threading) be used to speed up Revana?
+  use_parallelization = TRUE
 )
 ```
 
@@ -377,19 +383,21 @@ Revana can also be run without providing ChIP-Seq or GeneHancer files. In this c
 After Revana has run the interactive HTML report can be generated like this:
 
 ```{r, eval=F, echo=T}
-create_HTML_report_new(
+create_results_HTML_report(
   # output directory, where the HTML report should be stored
   HTML_report_output_dir_path,
   # results paths file - see below
   output_paths_file_path = output_paths_file_path,
   # whether TF binding site analysis has been conducted before
-  has_run_tf_binding_site_analysis = FALSE
+  has_run_tf_binding_site_analysis = FALSE,
+  # should parallelization (multi-threading) be used to speed up Revana?
+  use_parallelization = FALSE
 )
 ```
 
 
 The _output\_paths\_file\_path_ argument describes the path to the results paths file. After Revana has run, it creates a file containing all the paths of the established results. To supply fewer arguments to the function, this file is designed to be used as input for the HTML report generation.
-If several subgroups are to supposed to be analysed within one HTML report, the results paths files have to be merged before supplying them as argument to the create_HTML_report_new function. This can be done like this
+If several subgroups are to supposed to be analysed within one HTML report, the results paths files have to be merged before supplying them as argument to the create_results_HTML_report function. This can be done like this
 
 ```{r, eval=F, echo=T}
 merge_results_paths_files(list_of_results_paths_file_paths=list(path_subgroup1, path_subgroup2))
@@ -409,7 +417,7 @@ prepare_genehancer_ref_file(
 )
 ```
 
-* Supply a reference_genome argument to the run function. E.g. for GRCh38 (hg38):
+* Supply a reference_genome argument to the _run\_analysis_ function. E.g. for GRCh38 (hg38):
 
 ```{r, eval=F, echo=T}
 # install hg38 genome if not installed yet
@@ -419,7 +427,7 @@ if (!require("BiocManager", quietly = TRUE))
 BiocManager::install("BSgenome.Hsapiens.UCSC.hg38")
 reference_genome <- BSgenome.Hsapiens.UCSC.hg38::Hsapiens
  
-run(
+run_analysis(
 paths_file_path = paths_file_path,
 gene_annotation_ref_file_path = gene_annotation_ref_file_path,
 gene_annotation_exons_ref_file_path = gene_annotation_exons_ref_file_path,
@@ -434,10 +442,10 @@ reference_genome = reference_genome
 )
 ```
 
-* Supply the genome name when using _create\_HTML\_report\_new_. E.g. for GRCh38 (hg38):
+* Supply the genome name when using _create\_results\_HTML\_report_. E.g. for GRCh38 (hg38):
 
 ```{r, eval=F, echo=T}
-create_HTML_report_new(
+create_results_HTML_report(
   HTML_report_output_dir_path, 
   output_paths_file_path = output_paths_file_path,
   has_run_tf_binding_site_analysis = FALSE,
@@ -450,7 +458,7 @@ Transcription factor binding site analysis can be a useful feature to understand
 
 Nevertheless transcription factor analysis can be a useful descriptive feature. Revana provides means of TF binding site analysis in a similar, but slightly enhanced fashion as cis-X. It uses the FIMO (Grant et al., 2011) tool from the MEME Suite to conduct the TF motif analysis.
 
-Depending on the number of somatic SNVs of the tumors under investigation TF binding analysis can be a computationally expensive operation and increase time, memory, and space consumption of Revana significantly. It is therefore disabled by default. To use the feature set _run\_tf\_binding\_site\_analysis = TRUE_ to Revana’s _run_ function and _has\_run\_tf\_binding\_site\_analysis\ = TRUE_ to Revana’s _create\_HTM\L_report\_new\ function. __As the transcription factor binding site analysis feature uses the MEME suite as external dependency, make sure to have it installed and accessible in your current environment PATH.__ You can find instructions on how to install MEME suite under https://meme-suite.org/ . Please also make sure to have the required reference files prepared (“FIMO Motif Id - TF Gene Name Conversion Table File” and “FIMO Motif Reference File”).
+Depending on the number of somatic SNVs of the tumors under investigation TF binding analysis can be a computationally expensive operation and increase time, memory, and space consumption of Revana significantly. It is therefore disabled by default. To use the feature set _run\_tf\_binding\_site\_analysis = TRUE_ to Revana’s _run\_analysis_ function and _has\_run\_tf\_binding\_site\_analysis\ = TRUE_ to Revana’s _create\_results\_HTML\_report_ function. __As the transcription factor binding site analysis feature uses the MEME suite as external dependency, make sure to have it installed and accessible in your current environment PATH.__ You can find instructions on how to install MEME suite under https://meme-suite.org/ . Please also make sure to have the required reference files prepared (“FIMO Motif Id - TF Gene Name Conversion Table File” and “FIMO Motif Reference File”).
 
 # 5 - Revana Workflow in Detail
 

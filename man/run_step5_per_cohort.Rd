@@ -9,7 +9,8 @@ run_step5_per_cohort(
   output_dir,
   subgroup_name = "DEFAULT_GROUP",
   skip_merging_Rds_chunks = FALSE,
-  run_tf_binding_site_analysis = TRUE
+  run_tf_binding_site_analysis = TRUE,
+  verbose = FALSE
 )
 }
 \arguments{
@@ -22,6 +23,8 @@ run_step5_per_cohort(
 \item{skip_merging_Rds_chunks}{Logical value. Should data chunks stored in .Rds-files be merged together. Default is TRUE - this step is required for regular report generation.}
 
 \item{run_tf_binding_site_analysis}{Was TF binding site analysis conducted?}
+
+\item{verbose}{should verbose logging be activated? (TRUE / FALSE)}
 }
 \description{
 Run Step 5 of the Revana workflow on a cohort/subgroup of tumor sample data

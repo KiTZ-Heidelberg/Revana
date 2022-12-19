@@ -55,7 +55,29 @@ calculate_FDR_via_ABH <- function (geneanno_marker_summary) {
     returned_gene_summary <- geneanno_marker_summary %>% dplyr::mutate(Bonferroni = combined_p_value, ABH = combined_p_value)
   }else {
     raw.p <- geneanno_marker_summary$combined_p_value
-    multtest.out <- multtest::mt.rawp2adjp(raw.p,c("Bonferroni","ABH"), na.rm = T)
+
+    # concerning ABH
+    # adaptive Benjamini Hochberg Procedure uses m0 estimation ()=> estimates number of true null) hypotheses
+    # before applying the FDR correction
+
+    # under some circumstances m0 cannot be estimated
+    # this leads the ABH output vector to consist of NA only
+    # all genes for these patients would be discarded
+
+    # it is questionable if this occurs with realistic (higher) number of genes
+    # but it does happen in the demonstration
+
+    # we decided to use the more conservative Bonferroni values in those cases
+
+    # for implementation see call_cis_activation.R
+
+
+    # suppress warning that occurs if m0 estimation fails
+    # In min(which(diff(h0.m, na.rm = TRUE) > 0), na.rm = TRUE) : no non-missing argument for min; return Inf / kein nicht-fehlendes Argument für min; gebe Inf zurück
+    suppress_certain_warning({
+      multtest.out <- multtest::mt.rawp2adjp(raw.p,c("Bonferroni","ABH"), na.rm = T)
+    },
+    c("min.*Inf"))
 
     adj.p.matrix <- multtest.out$adj
     indexes <- order(multtest.out$index)

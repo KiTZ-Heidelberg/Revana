@@ -8,6 +8,7 @@ merge_Rds_chunks(
   pattern,
   folder,
   output_file_path,
+  verbose = FALSE,
   max_size_all_chunks = 2e+09
 )
 }
@@ -17,6 +18,8 @@ merge_Rds_chunks(
 \item{folder}{folder to search for RDS chunk files}
 
 \item{output_file_path}{where to store the merged output file (full_path)}
+
+\item{verbose}{should verbose logging be activated? (TRUE / FALSE)}
 
 \item{max_size_all_chunks}{the maximum size of all the chunks combined that would still be merged}
 }

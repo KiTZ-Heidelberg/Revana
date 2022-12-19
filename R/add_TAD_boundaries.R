@@ -78,7 +78,7 @@ add_TAD_boundaries_to_gene_annotation <- function(gene_annotation, TADs) {
 
 
     data.table::setDT(union_data)
-    print(class(union_data))
+    # print(class(union_data))
 
 
     TAD_info_per_gene <- union_data[

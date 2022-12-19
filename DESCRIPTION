@@ -8,7 +8,7 @@ Depends: R (>= 4.2.1)
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.1.1
+RoxygenNote: 7.2.1
 biocViews:
 Imports: stats (>= 4.2.1), readr (>= 2.1.2), stringr (>= 1.4.1), dplyr (>= 1.0.10), purrr (>= 0.3.4), magrittr (>= 2.0.3), tidyr (>= 1.2.0), GenomeInfoDb (>= 1.32.3), GenomicRanges (>= 1.48.0), IRanges (>= 2.30.1), S4Vectors (>= 0.34.0), rtracklayer (>= 1.56.1), data.table (>= 1.14.2), future (>= 1.28.0), furrr (>= 0.3.1), progressr (>= 0.11.0), rmarkdown (>= 2.16), ggplot2 (>= 3.3.6), forcats (>= 0.5.2), UpSetR (>= 1.4.0), svglite (>= 2.1.0), ggrepel (>= 0.9.1), ggbio (>= 1.44.1), knitr (>= 1.40), ROCit (>= 2.1.1), Rsamtools (>= 2.12.0), liftOver (>= 1.20.0), Biostrings (>= 2.64.1), multtest (>= 2.52.0), tibble (>= 3.1.8)
 Suggests: testthat (>= 3.0.0), BSgenome.Hsapiens.UCSC.hg19

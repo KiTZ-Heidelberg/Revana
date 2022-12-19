@@ -461,9 +461,11 @@ as Github README <a href="https://github.com/KiTZ-Heidelberg/Revana">here</a></p
 <h1>1 - Installation</h1>
 <p>Revana can be installed from the R console with the following
 command:</p>
-<pre class="r"><code>if (!requireNamespace(&quot;devtools&quot;, quietly = TRUE))
-    install.packages(&quot;devtools&quot;)
-devtools::install_github(&quot;https://github.com/KiTZ-Heidelberg/revana&quot;)</code></pre>
+<pre class="r"><code>if (!requireNamespace(&quot;remotes&quot;, quietly = TRUE))
+  install.packages(&quot;remotes&quot;)
+remotes::install_github(&quot;https://github.com/KiTZ-Heidelberg/revana&quot;)</code></pre>
+<p>For more details about the installation or any trouble shooting see
+the installation walkthrough <a href="https://github.com/KiTZ-Heidelberg/revana-demo-data">here</a></p>
 </div>
 <div id="input-formats" class="section level1">
 <h1>2 - Input Formats</h1>
@@ -1167,8 +1169,8 @@ based on elite evidence</td>
 <p>* These columns are annotative only. Thus, no calculations are based
 on their values.</p>
 <p>If you want to run Revana without GeneHancer functionality, set the
-<em>genehancer_ref_file_path</em> argument in the run function argument
-to <em>NULL</em>.</p>
+<em>genehancer_ref_file_path</em> argument in the <em>run_analysis</em>
+function argument to <em>NULL</em>.</p>
 </div>
 </div>
 </div>
@@ -1287,7 +1289,7 @@ R.</p>
 <p>First load the package into the R workspace.</p>
 <pre class="r"><code>library(revana)</code></pre>
 <p>Then run Revana with the following command:</p>
-<pre class="r"><code>run(
+<pre class="r"><code>run_analysis(
   # path to the paths file
   paths_file_path = paths_file_path,
   # output directory to store results
@@ -1313,19 +1315,25 @@ R.</p>
   # whether TF binding site analysis is supposed to be run
   run_tf_binding_site_analysis = FALSE,
   # reference genome – provide NULL for hg 19
-  reference_genome = NULL
+  reference_genome = NULL,
+  # should verbose logging be activated?
+  verbose = FALSE,
+  # should parallelization (multi-threading) be used to speed up Revana?
+  use_parallelization = TRUE
 )</code></pre>
 <p>Revana can also be run without providing ChIP-Seq or GeneHancer
 files. In this case set the respective arguments to <em>NULL</em>.</p>
 <p>After Revana has run the interactive HTML report can be generated
 like this:</p>
-<pre class="r"><code>create_HTML_report_new(
+<pre class="r"><code>create_results_HTML_report(
   # output directory, where the HTML report should be stored
   HTML_report_output_dir_path,
   # results paths file - see below
   output_paths_file_path = output_paths_file_path,
   # whether TF binding site analysis has been conducted before
-  has_run_tf_binding_site_analysis = FALSE
+  has_run_tf_binding_site_analysis = FALSE,
+  # should parallelization (multi-threading) be used to speed up Revana?
+  use_parallelization = FALSE
 )</code></pre>
 <p>The <em>output_paths_file_path</em> argument describes the path to
 the results paths file. After Revana has run, it creates a file
@@ -1333,8 +1341,8 @@ containing all the paths of the established results. To supply fewer
 arguments to the function, this file is designed to be used as input for
 the HTML report generation. If several subgroups are to supposed to be
 analysed within one HTML report, the results paths files have to be
-merged before supplying them as argument to the create_HTML_report_new
-function. This can be done like this</p>
+merged before supplying them as argument to the
+create_results_HTML_report function. This can be done like this</p>
 <pre class="r"><code>merge_results_paths_files(list_of_results_paths_file_paths=list(path_subgroup1, path_subgroup2))</code></pre>
 <div id="different-genome-build" class="section level2">
 <h2>Different Genome build</h2>
@@ -1355,8 +1363,8 @@ find the corresponding GTF file for download under <a href="https://ftp.ebi.ac.u
   skip_lifting_over = TRUE
 )</code></pre>
 <ul>
-<li>Supply a reference_genome argument to the run function. E.g. for
-GRCh38 (hg38):</li>
+<li>Supply a reference_genome argument to the <em>run_analysis</em>
+function. E.g. for GRCh38 (hg38):</li>
 </ul>
 <pre class="r"><code># install hg38 genome if not installed yet
 if (!require(&quot;BiocManager&quot;, quietly = TRUE))
@@ -1365,7 +1373,7 @@ if (!require(&quot;BiocManager&quot;, quietly = TRUE))
 BiocManager::install(&quot;BSgenome.Hsapiens.UCSC.hg38&quot;)
 reference_genome &lt;- BSgenome.Hsapiens.UCSC.hg38::Hsapiens
  
-run(
+run_analysis(
 paths_file_path = paths_file_path,
 gene_annotation_ref_file_path = gene_annotation_ref_file_path,
 gene_annotation_exons_ref_file_path = gene_annotation_exons_ref_file_path,
@@ -1379,10 +1387,10 @@ subgroup_name = “SUBGROUP_NAME”
 reference_genome = reference_genome
 )</code></pre>
 <ul>
-<li>Supply the genome name when using <em>create_HTML_report_new</em>.
-E.g. for GRCh38 (hg38):</li>
+<li>Supply the genome name when using
+<em>create_results_HTML_report</em>. E.g. for GRCh38 (hg38):</li>
 </ul>
-<pre class="r"><code>create_HTML_report_new(
+<pre class="r"><code>create_results_HTML_report(
   HTML_report_output_dir_path, 
   output_paths_file_path = output_paths_file_path,
   has_run_tf_binding_site_analysis = FALSE,
@@ -1407,8 +1415,9 @@ investigation TF binding analysis can be a computationally expensive
 operation and increase time, memory, and space consumption of Revana
 significantly. It is therefore disabled by default. To use the feature
 set <em>run_tf_binding_site_analysis = TRUE</em> to Revana’s
-<em>run</em> function and <em>has_run_tf_binding_site_analysis =
-TRUE</em> to Revana’s _create_HTM_report_new function. <strong>As the
+<em>run_analysis</em> function and
+<em>has_run_tf_binding_site_analysis = TRUE</em> to Revana’s
+<em>create_results_HTML_report</em> function. <strong>As the
 transcription factor binding site analysis feature uses the MEME suite
 as external dependency, make sure to have it installed and accessible in
 your current environment PATH.</strong> You can find instructions on how

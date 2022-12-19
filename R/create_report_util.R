@@ -48,7 +48,7 @@ create_color_palette <- function(subgroups) {
 }
 
 save_ggplot <- function(plot, filename) {
-    ggplot2::ggsave(filename = filename, plot = plot)
+    ggplot2::ggsave(filename = filename, plot = plot, width = 7, height = 7)
 }
 
 cont_table <- function(a, b) {

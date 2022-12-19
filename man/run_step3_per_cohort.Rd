@@ -10,7 +10,8 @@ run_step3_per_cohort(
   gene_annotation_ref_file_path,
   TAD_file_path,
   genehancer_ref_file_path = NULL,
-  chipseq_file_path = NULL
+  chipseq_file_path = NULL,
+  verbose = FALSE
 )
 }
 \arguments{
@@ -25,6 +26,8 @@ run_step3_per_cohort(
 \item{genehancer_ref_file_path}{Path to the reference for GeneHancer. See the documentation for the exact format of this file and how to obtain it.}
 
 \item{chipseq_file_path}{Path to the ChIP-Seq file. The ChIP-Seq file contains genomic coordinates of regulatory active regions and can be obtained from experimental data or online less specific online resources. This file is optional, although an empty dummy file has to be used, if no ChIP-Seq data is supplied. See the documentation for the exact format of this file.}
+
+\item{verbose}{should verbose logging be activated? (TRUE / FALSE)}
 }
 \description{
 Run Step 3 of the Revana workflow on a cohort/subgroup of tumor sample data

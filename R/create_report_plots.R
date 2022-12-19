@@ -49,6 +49,10 @@ plot_CNA_bar_chart_by_subgroup <- function(processed_data, subgroup, color_palet
 plot_expression_box_plot_by_subgroup <- function(processed_data, subgroup, color_palette) {
     processed_data$expression_data_table %>%
         dplyr::filter(sample_ID %in% processed_data$samples_by_subgroup[[subgroup]]) %>%
+
+        # to adress warning: Removed X rows containing non-finite values (`stat_boxplot()`).
+        tidyr::drop_na(FPKM) %>%
+
         dplyr::mutate(sample_ID = forcats::fct_reorder(sample_ID, -FPKM)) %>%
         ggplot2::ggplot() +
         ggplot2::geom_boxplot(ggplot2::aes(x = sample_ID, y = FPKM, fill = subgroup)) +
@@ -111,14 +115,19 @@ plot_cis_activated_genes_bar_chart_by_subgroup <- function(processed_data, subgr
 }
 
 plot_ase_detection_upset_plot_by_subgroup <- function(processed_data, subgroup) {
-    processed_data$cis_activation_summary_table_for_upsetr %>%
-        dplyr::filter(sample_ID %in% processed_data$samples_by_subgroup[[subgroup]]) %>%
-        # FIX FOR: currently UpSetR bug of not including first column of dataset if only made up of 0s
-        dplyr::mutate(ones1 = 1, ones2 = 1) %>%
-        dplyr::select("set_id", "sample_ID", "ones1", "cis_activated_gene", "passed_ASE_filter", "ASE_filter_rescued_oncogene", "ASE_marker_run_overlap", "ones2") %>%
-        UpSetR::upset(
-            sets = c("cis_activated_gene", "passed_ASE_filter", "ASE_filter_rescued_oncogene", "ASE_marker_run_overlap")
-        )
+    # suppress: UpsetR message: `geom_line()`: Each group consists of only one observation.
+    suppress_certain_message({
+        plot <- processed_data$cis_activation_summary_table_for_upsetr %>%
+            dplyr::filter(sample_ID %in% processed_data$samples_by_subgroup[[subgroup]]) %>%
+            # FIX FOR: currently UpSetR bug of not including first column of dataset if only made up of 0s
+            dplyr::mutate(ones1 = 1, ones2 = 1) %>%
+            dplyr::select("set_id", "sample_ID", "ones1", "cis_activated_gene", "passed_ASE_filter", "ASE_filter_rescued_oncogene", "ASE_marker_run_overlap", "ones2") %>%
+            UpSetR::upset(
+                sets = c("cis_activated_gene", "passed_ASE_filter", "ASE_filter_rescued_oncogene", "ASE_marker_run_overlap")
+            )
+        },c("Each group consists of only one observation.")
+    )
+    return(plot)
 }
 
 plot_ase_detection_upset_plot_whole_cohort <- function(processed_data) {
@@ -134,6 +143,11 @@ plot_ase_detection_upset_plot_whole_cohort <- function(processed_data) {
 plot_OHE_ASE_q_value_dot_plot <- function(processed_data, color_palette) {
     processed_data$cis_activation_summary_table_mut_info %>%
         dplyr::filter(cis_activated_gene == TRUE) %>%
+
+        # to adress warning: Removed X rows containing missing values (`geom_point()`). results from rescued or marker run qualified entries
+        tidyr::drop_na(OHE_used_pvalue) %>% 
+        tidyr::drop_na(ABH) %>%
+
         ggplot2::ggplot() +
         ggplot2::geom_point(ggplot2::aes(x = -log10(OHE_used_pvalue), y = -log10(ABH), color = subgroup)) +
         ggplot2::geom_hline(ggplot2::aes(yintercept = -log10(0.05)), color = "red", linetype = "dashed") +

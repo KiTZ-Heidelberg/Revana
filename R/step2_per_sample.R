@@ -9,6 +9,7 @@
 #' @param motif_id_tf_gene_name_table_path Path to the reference for the TF gene name annotation of the FIMO motifs. See the documentation for the exact format of this file and how to obtain it.
 #' @param run_tf_binding_site_analysis Should TF binding site analysis be conducted?
 #' @param reference_genome Which genome should be used. Default (NULL) uses Human Genome build GRCh37 (hg19)
+#' @param verbose should verbose logging be activated? (TRUE / FALSE)
 #'
 #' @details
 #'
@@ -31,8 +32,11 @@ run_step2_per_sample <- function(paths_file_path,
                                  fimo_motif_ref_path = NULL,
                                  motif_id_tf_gene_name_table_path = NULL,
                                  run_tf_binding_site_analysis = TRUE,
-                                 reference_genome = NULL) {
-  cat(paste0("Start - ", Sys.time(), "\n"))
+                                 reference_genome = NULL,
+                                 verbose = FALSE) {
+
+  log_msg("started step 2", verbose = verbose, sample_id = sample_id)
+
   # check directories --------------------------------------------
   check_output_dir_existence(output_dir)
   sample_dir <- file.path(output_dir, sample_id)
@@ -60,17 +64,20 @@ run_step2_per_sample <- function(paths_file_path,
 
   # import required references  ----------------------------------
   gene_annotation <- import_gene_annotation_ref_file(gene_annotation_ref_file_path)
-  cat(paste0("Imports completed - ", Sys.time(), "\n"))
+
+  log_msg("ASE imports completed", verbose = verbose, sample_id = sample_id)
 
   # process data  ------------------------------------------------
   processed_markers <- process_markers(markers, CNAs)
-  cat(paste0("markers processed - ", Sys.time(), "\n"))
+  log_msg("markers processed", verbose = verbose, sample_id = sample_id)
   rm(markers)
   gc() # free memory
+
   runs <- find_marker_runs(processed_markers)
-  cat(paste0("Runs calculated - ", Sys.time(), "\n"))
+  log_msg("marker runs calculated", verbose = verbose, sample_id = sample_id)
+
   geneanno_marker_summary <- calculate_ASE(processed_markers, gene_annotation, runs)
-  cat(paste0("ASE calculated - ", Sys.time(), "\n"))
+  log_msg("ASE calculated", verbose = verbose, sample_id = sample_id)
 
   # store results ------------------------------------------------
   saveRDS(
@@ -106,9 +113,7 @@ run_step2_per_sample <- function(paths_file_path,
   rm(processed_markers, runs, geneanno_marker_summary)
   gc() # free memory
 
-  cat(paste0("ASE files written - ", Sys.time(), "\n"))
-
-
+  log_msg("ASE files written", verbose = verbose, sample_id = sample_id)
 
   # PROCESS SNVs ################################################
 
@@ -127,6 +132,8 @@ run_step2_per_sample <- function(paths_file_path,
   )
 
   if (run_tf_binding_site_analysis) {
+
+    log_msg("TF binding site analysis started", verbose = verbose, sample_id = sample_id)
 
     # import required references  ----------------------------------
     motif_id_tf_gene_name_table <- import_motif_id_tf_gene_name_ref_file(motif_id_tf_gene_name_table_path)
@@ -161,11 +168,14 @@ run_step2_per_sample <- function(paths_file_path,
 
     rm(motif_id_tf_gene_name_table, somatic_SNV_tf_binding_data)
     gc() # free memory
+
+    log_msg("TF binding site analysis completed", verbose = verbose, sample_id = sample_id)
   }
 
   rm(somatic_SNVs)
   gc() # free memory
 
+  log_msg("somatic SNVs processed", verbose = verbose, sample_id = sample_id)
 
 
   # PROCESS COPY NUMBERS ########################################
@@ -203,6 +213,7 @@ run_step2_per_sample <- function(paths_file_path,
     file.path(sample_dir, paste0(sample_id, ".copy_number_by_gene.txt"))
   )
 
+  log_msg("copy numbers processed", verbose = verbose, sample_id = sample_id)
 
 
 
@@ -229,6 +240,7 @@ run_step2_per_sample <- function(paths_file_path,
   rm(expression, expression_processed, gene_annotation, copy_numbers, processed_copy_numbers, copy_number_by_gene)
   gc() # free memory
 
+  log_msg("expression processed", verbose = verbose, sample_id = sample_id)
 
 
   # PROCESS CNAs ##########################################
@@ -249,6 +261,8 @@ run_step2_per_sample <- function(paths_file_path,
 
   rm(CNAs, CNAs_processed)
   gc() # free memory
+
+  log_msg("CNAs processed", verbose = verbose, sample_id = sample_id)
 
 
 
@@ -273,6 +287,10 @@ run_step2_per_sample <- function(paths_file_path,
 
   rm(SVs_processed, SVs)
   gc() # free memory
+
+  log_msg("SVs processed", verbose = verbose, sample_id = sample_id)
+
+  log_msg("completed step 2", verbose = verbose, sample_id = sample_id)
 }
 
 
@@ -310,16 +328,28 @@ run_step2_per_cohort <- function(paths_file_path,
                                  fimo_motif_ref_path = NULL,
                                  motif_id_tf_gene_name_table_path = NULL,
                                  run_tf_binding_site_analysis = TRUE,
-                                 reference_genome = NULL) {
+                                 reference_genome = NULL,
+                                 verbose = FALSE) {
   # import paths file  --------------------------------------------
   paths <- import_paths_file(paths_file_path, check_file_table_headers = T)
 
   n_samples <- nrow(paths)
 
-  future::plan(future::multicore)
+  if(.Platform$OS.type == "unix") {
+    future::plan(future::multicore)
+  }else{
+    future::plan(future::multisession)
+  }
+
+  cat("Step 2: running in parallel on ")
+  cat(future::nbrOfWorkers())
+  cat(" workers\n")
+
   progressr::with_progress({
     p <- progressr::progressor(steps = n_samples)
     unique(paths$sample_id) %>% furrr::future_walk(function(x) {
+      # uncomment for easier debugging:
+      # withCallingHandlers(message=handle_message, warning = handle_warning, {
       run_step2_per_sample(
         paths_file_path,
         output_dir,
@@ -329,8 +359,10 @@ run_step2_per_cohort <- function(paths_file_path,
         fimo_motif_ref_path,
         motif_id_tf_gene_name_table_path,
         run_tf_binding_site_analysis,
-        reference_genome
+        reference_genome,
+        verbose
       )
+      # })
 
       p() # progress ++
     })
@@ -371,23 +403,31 @@ run_step2_per_cohort_serial <- function(paths_file_path,
                                         fimo_motif_ref_path = NULL,
                                         motif_id_tf_gene_name_table_path = NULL,
                                         run_tf_binding_site_analysis = TRUE,
-                                        reference_genome = NULL) {
+                                        reference_genome = NULL,
+                                        verbose = FALSE) {
   # import paths file  --------------------------------------------
   paths <- import_paths_file(paths_file_path, check_file_table_headers = T)
 
   n_samples <- nrow(paths)
 
-  for (s_id in paths$sample_id) {
-    run_step2_per_sample(
-      paths_file_path,
-      output_dir,
-      s_id,
-      gene_annotation_ref_file_path,
-      gene_annotation_exons_ref_file_path,
-      fimo_motif_ref_path,
-      motif_id_tf_gene_name_table_path,
-      run_tf_binding_site_analysis,
-      reference_genome
-    )
-  }
+  cat("Step 2: running serially\n")
+
+  progressr::with_progress({
+    p <- progressr::progressor(steps = n_samples)
+    for (s_id in paths$sample_id) {
+      run_step2_per_sample(
+        paths_file_path,
+        output_dir,
+        s_id,
+        gene_annotation_ref_file_path,
+        gene_annotation_exons_ref_file_path,
+        fimo_motif_ref_path,
+        motif_id_tf_gene_name_table_path,
+        run_tf_binding_site_analysis,
+        reference_genome,
+        verbose
+      )
+      p()
+    }
+  })
 }

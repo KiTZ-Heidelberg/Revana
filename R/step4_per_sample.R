@@ -7,7 +7,8 @@ run_step4_per_sample_chunkwise_SNV_links <- function(output_dir,
                                                      check_paths = TRUE,
                                                      store_somatic_SNV_tf_binding_data_genes_all = FALSE,
                                                      store_somatic_SNV_tf_binding_data_genehancer_all = FALSE,
-                                                     run_tf_binding_site_analysis = TRUE) {
+                                                     run_tf_binding_site_analysis = TRUE,
+                                                     verbose = FALSE) {
     # get all required paths ---------------------------------
     cohort_expression_reference_path <- file.path(output_dir, "cohort.expression.reference.Rds")
     sample_dir_path <- file.path(output_dir, sample_id)
@@ -35,7 +36,6 @@ run_step4_per_sample_chunkwise_SNV_links <- function(output_dir,
 
 
     # CALCULATE OHE ##########################################
-    cat("CALCULATE OHE\n")
 
     # import required data -----------------------------------
     cohort_expression_reference <- readRDS(cohort_expression_reference_path)
@@ -59,11 +59,11 @@ run_step4_per_sample_chunkwise_SNV_links <- function(output_dir,
     rm(cohort_expression_reference)
     gc() # free memory
 
+    log_msg("OHE calculated", verbose = verbose, sample_id = sample_id)
 
 
 
     # CALL CIS-ACTIVATION #####################################
-    cat("CALL CIS-ACTIVATION\n")
 
     # import required data -----------------------------------
     marker_summary <- readRDS(marker_summary_file_path)
@@ -71,10 +71,10 @@ run_step4_per_sample_chunkwise_SNV_links <- function(output_dir,
     # process data  ------------------------------------------------
     cis_activation_summary <- call_cis_activation(OHE_table, marker_summary)
 
+    log_msg("cis-activation called", verbose = verbose, sample_id = sample_id)
 
 
     # ADD TADs TO GENEs #####################################
-    cat("ADD TADs TO GENEs\n")
 
     # import required data -----------------------------------
     TADs <- import_TAD_file(TAD_file_path)
@@ -109,9 +109,9 @@ run_step4_per_sample_chunkwise_SNV_links <- function(output_dir,
     rm(OHE_table, marker_summary)
     gc() # free memory
 
+    log_msg("linked TADs to genes", verbose = verbose, sample_id = sample_id)
 
     # PREPARE GENEHANCER DATA ################################
-    cat("PREPARE GENEHANCER DATA\n")
 
     # import required data -----------------------------------
     genehancer <- readRDS(genehancer_Rds_path)
@@ -133,8 +133,10 @@ run_step4_per_sample_chunkwise_SNV_links <- function(output_dir,
         sep = "\t"
     )
 
+    log_msg("GeneHancer data prepared", verbose = verbose, sample_id = sample_id)
+
+
     # PREPARE CHIPSEQ DATA ################################
-    cat("PREPARE CHIPSEQ DATA\n")
 
     # import required data -----------------------------------
     chipseq <- readRDS(chipseq_file_path)
@@ -168,9 +170,9 @@ run_step4_per_sample_chunkwise_SNV_links <- function(output_dir,
         sep = "\t"
     )
 
+    log_msg("ChIP-Seq data prepared", verbose = verbose, sample_id = sample_id)
 
     # LINK SNVs TO GENES AND GENEHANCERS ######################
-    cat("LINK SNVs TO GENES AND GENEHANCERS\n")
     # import required data -----------------------------------
     somatic_SNVs <- readRDS(somatic_SNV_file_path)
     data.table::setDT(somatic_SNVs)
@@ -254,6 +256,9 @@ run_step4_per_sample_chunkwise_SNV_links <- function(output_dir,
     rm(somatic_SNVs, somatic_SNV_gene_combinations, somatic_SNV_genehancer_combinations, somatic_SNV_chipseq_combinations)
     gc() # free memory
 
+    log_msg("somatic SNVs linked to genes (and GeneHancers)", verbose = verbose, sample_id = sample_id)
+
+
     # LINK SNVs TF BINDING DATA TO GENES AND GENEHANCERS (optional) ######################
     if (run_tf_binding_site_analysis) {
         tf_binding_site_step4_workflow(
@@ -266,6 +271,8 @@ run_step4_per_sample_chunkwise_SNV_links <- function(output_dir,
             store_somatic_SNV_tf_binding_data_genes_all,
             store_somatic_SNV_tf_binding_data_genehancer_all
         )
+
+        log_msg("somatic SNVs TF binding data linked to genes (and GeneHancers)", verbose = verbose, sample_id = sample_id)
     }
 
     # TODO: add new output files to step 5
@@ -273,7 +280,6 @@ run_step4_per_sample_chunkwise_SNV_links <- function(output_dir,
 
 
     # LINK CNAs TO GENES #####################################
-    cat("LINK CNAs TO GENES AND GENEHANCERS\n")
 
     # import required data -----------------------------------
     CNAs <- readRDS(CNA_file_path)
@@ -359,11 +365,10 @@ run_step4_per_sample_chunkwise_SNV_links <- function(output_dir,
     rm(CNAs, CNA_gene_combinations, CNA_genehancer_combinations, CNA_chipseq_combinations)
     gc() # free memory
 
-
+    log_msg("CNAs linked to genes (and GeneHancers, ChIP-Seq)", verbose = verbose, sample_id = sample_id)
 
 
     # LINK SVs TO GENES #####################################
-    cat("LINK SVs TO GENES AND GENEHANCERS\n")
 
     # import required data -----------------------------------
     SVs <- readRDS(SV_file_path)
@@ -454,6 +459,7 @@ run_step4_per_sample_chunkwise_SNV_links <- function(output_dir,
     rm(SVs, SVs_with_TAD_combinations, SV_gene_combinations)
     gc() # free memory
 
+    log_msg("SVs linked to genes (and GeneHancers, ChIP-Seq)", verbose = verbose, sample_id = sample_id)
 
 
     rm(cis_activation_summary_TADs)
@@ -467,6 +473,8 @@ run_step4_per_sample_chunkwise_SNV_links <- function(output_dir,
 #' @param output_dir Where are the analysis results to be stored
 #' @param TAD_file_path Path to the TAD file. The TAD file contains genomic coordinates of Topologically Associated Domains (TADs). See the documentation for the exact format of this file.
 #' @param run_tf_binding_site_analysis Should TF binding site analysis be conducted?
+#' @param verbose should verbose logging be activated? (TRUE / FALSE)
+#' @param use_parallelization should parallelization be used to speed up Revana (TRUE / FALSE), defaults to TRUE
 #'
 #' @details
 #'
@@ -484,7 +492,9 @@ run_step4_per_sample_chunkwise_SNV_links <- function(output_dir,
 run_step4_per_cohort <- function(paths_file_path,
                                  output_dir,
                                  TAD_file_path,
-                                 run_tf_binding_site_analysis = TRUE) {
+                                 run_tf_binding_site_analysis = TRUE,
+                                 verbose = FALSE,
+                                 use_parallelization = TRUE) {
     # import paths file  -------------------------------------
     paths <- import_paths_file(paths_file_path, check_file_table_headers = T)
 
@@ -536,25 +546,68 @@ run_step4_per_cohort <- function(paths_file_path,
     # run step 4 on all samples ------------------------------
     n_samples <- nrow(paths)
 
-    future::plan(future::multicore)
-    progressr::with_progress({
-        p <- progressr::progressor(steps = n_samples)
-        unique(sample_ids) %>% furrr::future_walk(function(s_id) {
-            ## for hypermutators
-            run_step4_per_sample_chunkwise_SNV_links(
-                output_dir,
-                s_id,
-                TAD_file_path,
-                genehancer_Rds_path,
-                chipseq_file_path,
-                chipseq_by_genes_file_path,
-                run_tf_binding_site_analysis = run_tf_binding_site_analysis
-            )
+    if(use_parallelization == TRUE){
+        if(.Platform$OS.type == "unix") {
+            future::plan(future::multicore)
+        }else{
+            future::plan(future::multisession)
+        }
 
-            # normal
-            # run_step4_per_sample(output_dir, s_id, TAD_file_path)
+        cat("Step 4: running in parallel on ")
+        cat(future::nbrOfWorkers())
+        cat(" workers\n")
 
-            p() # progress ++
+
+        progressr::with_progress({
+            p <- progressr::progressor(steps = n_samples)
+            unique(sample_ids) %>% furrr::future_walk(function(s_id) {
+                ## for hypermutators
+                # uncomment for easier debugging:
+                # withCallingHandlers(message=handle_message, warning = handle_warning, {
+                run_step4_per_sample_chunkwise_SNV_links(
+                    output_dir,
+                    s_id,
+                    TAD_file_path,
+                    genehancer_Rds_path,
+                    chipseq_file_path,
+                    chipseq_by_genes_file_path,
+                    run_tf_binding_site_analysis = run_tf_binding_site_analysis,
+                    verbose = verbose
+                )
+                # })
+
+                # DEPRECATED:
+                # normal
+                # run_step4_per_sample(output_dir, s_id, TAD_file_path)
+
+                p() # progress ++
+            })
         })
-    })
+    }else{
+        cat("Step 4: running serially\n")
+
+
+        progressr::with_progress({
+            p <- progressr::progressor(steps = n_samples)
+            for (s_id in unique(sample_ids)){
+                ## for hypermutators
+                run_step4_per_sample_chunkwise_SNV_links(
+                    output_dir,
+                    s_id,
+                    TAD_file_path,
+                    genehancer_Rds_path,
+                    chipseq_file_path,
+                    chipseq_by_genes_file_path,
+                    run_tf_binding_site_analysis = run_tf_binding_site_analysis,
+                    verbose = verbose
+                )
+
+                # DEPRECATED:
+                # normal
+                # run_step4_per_sample(output_dir, s_id, TAD_file_path)
+
+                p() # progress ++
+            }
+        })
+    }
 }
