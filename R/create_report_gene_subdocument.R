@@ -587,7 +587,7 @@ create_report_gene_subdocument <- function(processed_data, GENE_NAME, color_pale
                         { if(length(SVs_others_y_numeric) > 0) ggplot2::geom_point(ggplot2::aes(x=pos, y = SVs_others_y_numeric, color=as.factor(label)), show.legend = F) } +
                         ggplot2::geom_errorbar(CNAs_others_of_gene, mapping = ggplot2::aes(xmin = cna_start, xmax = cna_end, y = CNAs_others_y_numeric), color = "green", width=0.5) + 
                         scale_color_mutation_type +
-                        ggplot2::scale_y_continuous(breaks = p_SVs_and_CNAs_cis_activated_y_breaks, labels = p_SVs_and_CNAs_cis_activated_y_labels) +
+                        ggplot2::scale_y_continuous(breaks = p_SVs_and_CNAs_others_y_breaks, labels = p_SVs_and_CNAs_others_y_labels) +
                         ggplot2::labs(y="")+
                         ggplot2::theme(panel.grid.minor = ggplot2::element_blank())
                 }else{
