@@ -268,7 +268,7 @@ create_report_gene_subdocument <- function(processed_data, GENE_NAME, color_pale
         # Expression by sample
         expression_by_sample_path <- file.path(HTML_gene_figure_directory, paste0("expression_by_sample_plot___",GENE_NAME,".svg"))
         expression_by_sample_plot <- cis_activation_summary_table_of_gene %>%
-            dplyr::mutate(sample_ID = forcats::fct_reorder(sample_ID, FPKM)) %>%
+            dplyr::mutate(sample_ID = forcats::fct_reorder(sample_ID, FPKM, .na_rm=F)) %>%
             ggplot2::ggplot() +
                 ggplot2::geom_bar(ggplot2::aes(x=sample_ID, y = FPKM, fill = subgroup, alpha = as.factor(cis_activated_gene)), stat="identity") +
                 ggplot2::geom_text(ggplot2::aes(x=sample_ID, y = FPKM, label=FPKM), color = "white", position = ggplot2::position_stack(vjust = 0.5), size = 1.7) +
@@ -302,7 +302,7 @@ create_report_gene_subdocument <- function(processed_data, GENE_NAME, color_pale
         # Coverage Ratio by sample
         cov_ratio_by_sample_path <- file.path(HTML_gene_figure_directory, paste0("cov_ratio_by_sample_plot___",GENE_NAME,".svg"))
         cov_ratio_by_sample_plot <- cis_activation_summary_table_of_gene %>%
-            dplyr::mutate(sample_ID = forcats::fct_reorder(sample_ID, FPKM)) %>%
+            dplyr::mutate(sample_ID = forcats::fct_reorder(sample_ID, FPKM, .na_rm=F)) %>%
             ggplot2::ggplot() +
                 ggplot2::geom_bar(ggplot2::aes(x=sample_ID, y = avg_cov_ratio, fill = subgroup, alpha = as.factor(cis_activated_gene)), stat="identity") +
                 ggplot2::geom_text(ggplot2::aes(x=sample_ID, y = avg_cov_ratio, label=avg_cov_ratio), color = "white", position = ggplot2::position_stack(vjust = 0.5), size = 1.7) +
